@@ -16,6 +16,13 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		<!-- 本地仓库: ODBC模块 -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<!-- log4j2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
