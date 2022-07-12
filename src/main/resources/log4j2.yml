@@ -1,0 +1,122 @@
+Configuration:
+    status: warn
+    monitorinterval: 5
+
+    Properties: # 定义全局变量
+        Property: # 缺省配置（用于开发环境）。其他环境需要在VM参数中指定，如下：
+            - name: log.level.console
+              value: info
+              #日志存放路径
+            - name: log.path
+              value: ./logs
+              #项目名称
+            - name: project.name
+              value: skynet
+
+    Appenders:
+        Console: #输出到控制台
+            name: CONSOLE
+            target: SYSTEM_OUT
+            ThresholdFilter:
+                level: ${sys:log.level.console} # “sys:”表示：如果VM参数中没指定这个变量值，则使用本文件中定义的缺省全局变量值
+                onMatch: ACCEPT
+                onMismatch: DENY
+            PatternLayout:
+                #显示日志模板
+                pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+        RollingFile:
+            - name: INFO_FILE
+              ignoreExceptions: false
+              fileName: ${log.path}/info/${project.name}.log
+              filePattern: "${log.path}/info/${project.name}-%d{yyyy-MM-dd}-%i.log"
+              PatternLayout:
+                  #日志
+                  pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+              ThresholdFilter:
+                  level: INFO
+                  onMatch: ACCEPT
+                  onMismatch: DENY
+              Policies:
+                  SizeBasedTriggeringPolicy:
+                      #文件超过多少进行切割
+                      size: "100 MB"
+              DefaultRolloverStrategy:
+                  #当天最多有多少个文件存在
+                  max: 20
+                  #重点删除规则
+                  Delete:
+                      #删除文件的根路径
+                      basePath: ${log.path}
+                      maxDepth: 2
+                      IfFileName:
+                          #删除日志匹配规则
+                          glob: "${project.name}-*.log"
+                      IfLastModified:
+                          #保留多少天的日志
+                          age: "20d"
+            - name: WARN_FILE
+              ignoreExceptions: false
+              fileName: ${log.path}/warn/${project.name}.log
+              filePattern: "${log.path}/warn/${project.name}-%d{yyyy-MM-dd}-%i.log"
+              PatternLayout:
+                  #日志
+                  pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+              ThresholdFilter:
+                  level: WARN
+                  onMatch: ACCEPT
+                  onMismatch: DENY
+              Policies:
+                  SizeBasedTriggeringPolicy:
+                      #文件超过多少进行切割
+                      size: "100 MB"
+              DefaultRolloverStrategy:
+                  #当天最多有多少个文件存在
+                  max: 20
+                  #重点删除规则
+                  Delete:
+                      #删除文件的根路径
+                      basePath: ${log.path}
+                      maxDepth: 2
+                      IfFileName:
+                          #删除日志匹配规则
+                          glob: "${project.name}-*.log"
+                      IfLastModified:
+                          #保留多少天的日志
+                          age: "20d"
+            - name: ERROR_FILE
+              ignoreExceptions: false
+              fileName: ${log.path}/error/${project.name}.log
+              filePattern: "${log.path}/error/${project.name}-%d{yyyy-MM-dd}-%i.log"
+              PatternLayout:
+                  #日志
+                  pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+              ThresholdFilter:
+                  level: ERROR
+                  onMatch: ACCEPT
+                  onMismatch: DENY
+              Policies:
+                  SizeBasedTriggeringPolicy:
+                      #文件超过多少进行切割
+                      size: "100 MB"
+              DefaultRolloverStrategy:
+                  #当天最多有多少个文件存在
+                  max: 20
+                  #重点删除规则
+                  Delete:
+                      #删除文件的根路径
+                      basePath: ${log.path}
+                      maxDepth: 2
+                      IfFileName:
+                          #删除日志匹配规则
+                          glob: "${project.name}-*.log"
+                      IfLastModified:
+                          #保留多少天的日志
+                          age: "20d"
+    Loggers:
+        Root:
+            level: info
+            AppenderRef:
+                - ref: CONSOLE
+                - ref: INFO_FILE
+                - ref: WARN_FILE
+                - ref: ERROR_FILE
