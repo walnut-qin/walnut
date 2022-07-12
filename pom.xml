@@ -16,6 +16,13 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		<!-- guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>31.1-jre</version>
+		</dependency>
+
 		<!-- mybatis-plus -->
 		<dependency>
 			<groupId>com.baomidou</groupId>
