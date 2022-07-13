@@ -29,6 +29,15 @@ public final class Timer {
     }
 
     /**
+     * 探测是否在计时
+     * 
+     * @return
+     */
+    public static boolean isRunning() {
+        return timer.get().isRunning();
+    }
+
+    /**
      * 重新开始计时
      */
     public static void reset() {

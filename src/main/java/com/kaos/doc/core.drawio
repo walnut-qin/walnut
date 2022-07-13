@@ -1,0 +1,196 @@
+<mxfile host="65bd71144e">
+    <diagram id="1yS_BfGPEUWB-8NfrPy3" name="Page-1">
+        <mxGraphModel dx="4002" dy="2434" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="5" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;基本类型&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;定义系统基本类型：&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;Enum：系统专用枚举&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;Cache：缓存&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;MediaType：媒体类型&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-414" y="-405.5" width="190" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="util" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+                    <mxGeometry x="-1054" y="-525.5" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;通用工具&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：系统无关的工具包&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;特性：无类属性，提供public static方法&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;- DurationUtils：Duration类的工具&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;- EnumUtils：Enum类的工具&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;- IntegerUtils：Integer类的工具&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;- ObjectUtils：Object类的工具&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;- StringUtils：String类的工具&amp;nbsp;&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-1334" y="-543" width="230" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="9" target="10">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-384" y="-463.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;功能工具&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;功能：实现专用功能的工具&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;特性：可以有类属性，无特殊限制&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;Timer：基于ThreadLocal实现的线程安全的计时器&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;ThreadPool：基于ThreadPoolExecutor封装的线程安全的线程池&amp;nbsp;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;RestTemplateWrapper：对RestTemplate的二次封装&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-1861" y="-912" width="370" height="205" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="19" target="14">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1411" y="-777.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="tool" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;" vertex="1" parent="1">
+                    <mxGeometry x="-1401" y="-819.5" width="120" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="lock" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="19">
+                    <mxGeometry x="20" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;锁工具&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;功能：敏感资源访问控制&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;特性：一次性锁管理&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;Lock：锁对象，管理锁芯&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;LockExecutor：基于ThreadLocal实现的带锁执行器&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-1791" y="-659.5" width="300" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="13" target="23">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1671" y="-499.5000000000001" as="targetPoint"/>
+                        <mxPoint x="-1581" y="-499.5000000000001" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1" source="19" target="9">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-650.8410526315793" y="-505.5" as="sourcePoint"/>
+                        <mxPoint x="-753.9989473684213" y="-365.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="type" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;fillColor=#ffe6cc;strokeColor=#d79b00;gradientColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="-834" y="-393" width="340" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="enums" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="26">
+                    <mxGeometry x="20" y="45" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="annotations" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="26">
+                    <mxGeometry x="120" y="45" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="exceptions" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="26">
+                    <mxGeometry x="230" y="45" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="type" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;" vertex="1" parent="26">
+                    <mxGeometry width="340" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="enums" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="62">
+                    <mxGeometry x="20" y="45" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="annotations" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="62">
+                    <mxGeometry x="120" y="45" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="exceptions" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="62">
+                    <mxGeometry x="230" y="45" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" source="26" target="5" parent="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-394" y="-296" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1" source="9" target="3">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-674" y="-458" as="sourcePoint"/>
+                        <mxPoint x="-514" y="-458" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="29" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;枚举&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：系统通用枚举&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;SexEnum：性别&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-1084" y="-215.5" width="190" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;注解&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：系统专用注解&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;ApiName：接口名称&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;PassToken：逃逸Token校验&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-764" y="-228" width="190" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="29" target="3">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-614" y="-248" as="targetPoint"/>
+                        <mxPoint x="-694" y="-248" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="28" target="30">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-464" y="-228" as="targetPoint"/>
+                        <mxPoint x="-544" y="-228" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="api" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;" vertex="1" parent="1">
+                    <mxGeometry x="-884" y="-1015.5" width="440" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="data" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;" vertex="1" parent="33">
+                    <mxGeometry x="10" y="30" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="entity" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="37">
+                    <mxGeometry x="10" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="mapper" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="37">
+                    <mxGeometry x="110" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="logic" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;" vertex="1" parent="33">
+                    <mxGeometry x="230" y="30" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="service" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="40">
+                    <mxGeometry x="20" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="controller" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="40">
+                    <mxGeometry x="120" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;核心接口api&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：接入核心数据库，提供核心数据接口&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-344" y="-1095.5" width="250" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" target="35" source="33">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-499" y="-773.5" as="targetPoint"/>
+                        <mxPoint x="-609" y="-810.5" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="45" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;异常&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：系统专用异常类型&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;TokenExpireException: Token过期&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-474" y="-215.5" width="210" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" target="45" source="44">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-194" y="-228" as="targetPoint"/>
+                        <mxPoint x="-403.25373134328356" y="-298" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="47" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1" source="33" target="26">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-514" y="-843.0037662337663" as="sourcePoint"/>
+                        <mxPoint x="-644" y="-458" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;事务层&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：封装数据库事务&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;TokenService：Token操作事务&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-344" y="-795.5" width="250" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="41" target="48">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-394" y="-635.5" as="targetPoint"/>
+                        <mxPoint x="-474" y="-635.5" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" value="&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;数据层&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-top: 10px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;&lt;br&gt;功能：封装数据库CURD&lt;/b&gt;&lt;/p&gt;" style="shape=note;size=15;spacingLeft=5;html=1;overflow=fill;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="-994" y="-830.5" width="160" height="67.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="" style="rounded=0;endArrow=none;dashed=1;html=1;" edge="1" parent="1" source="37" target="50">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-516.25" y="-560.5" as="targetPoint"/>
+                        <mxPoint x="-614" y="-675.5" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="52" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1" source="33" target="9">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-689.3201801801798" y="-778" as="sourcePoint"/>
+                        <mxPoint x="-794.0048648648645" y="-363" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="53" value="frame" style="shape=folder;xSize=90;align=left;spacingLeft=10;align=left;verticalAlign=top;spacingLeft=5;spacingTop=-4;tabWidth=40;tabHeight=20;tabPosition=left;html=1;strokeWidth=1;recursiveResize=0;" vertex="1" parent="1">
+                    <mxGeometry x="-1139" y="-1165" width="215" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="mybatis" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="53">
+                    <mxGeometry x="17.5" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="spring" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="53">
+                    <mxGeometry x="127.5" y="40" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1" source="58" target="41">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-796.4539393939394" y="-1158" as="sourcePoint"/>
+                        <mxPoint x="-993.9993939393939" y="-850.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="61" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1" source="53" target="9">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-1314.0000000000005" y="-1187.9999999999998" as="sourcePoint"/>
+                        <mxPoint x="-991.5000000000005" y="-865.5000000000002" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
