@@ -8,7 +8,7 @@ import org.springframework.core.convert.converter.Converter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class StringToLocalTimeConverter implements Converter<String, LocalTime> {
+class StringToLocalTimeConverter implements Converter<String, LocalTime> {
     /**
      * 字符串格式
      */

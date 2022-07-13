@@ -8,7 +8,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class HttpMessageConverterConfigurer implements WebMvcConfigurer {
+class HttpMessageConverterConfigurer implements WebMvcConfigurer {
     /**
      * 注册HttpMessageConverter，用于读写Http消息的body
      */
