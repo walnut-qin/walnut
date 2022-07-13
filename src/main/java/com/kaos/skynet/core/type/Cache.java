@@ -47,7 +47,17 @@ public abstract class Cache<K, V> {
      * @param converter
      */
     protected Cache(Integer size, Converter<K, V> converter) {
-        this(size, converter, Duration.ofSeconds(15), Duration.ofMinutes(5));
+        this(size, converter, Duration.ofMinutes(1), Duration.ofMinutes(10));
+    }
+
+    /**
+     * 后初始化
+     * 
+     * @param size
+     * @param converter
+     */
+    protected Cache(Converter<K, V> converter) {
+        this(200, converter);
     }
 
     /**

@@ -11,10 +11,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.kaos.skynet.core.api.data.cache.KaosUserAccessCache;
+import com.kaos.skynet.core.api.data.cache.KaosUserCache;
 import com.kaos.skynet.core.api.data.entity.KaosUser;
 import com.kaos.skynet.core.api.data.entity.KaosUserAccess;
-import com.kaos.skynet.core.api.data.mapper.KaosUserAccessMapper;
-import com.kaos.skynet.core.api.data.mapper.KaosUserMapper;
 import com.kaos.skynet.core.type.exceptions.TokenExpireException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +51,13 @@ public class TokenService {
      * 账户信息表
      */
     @Autowired
-    KaosUserMapper kaosUserMapper;
+    KaosUserCache kaosUserCache;
 
     /**
      * 密码信息接口
      */
     @Autowired
-    KaosUserAccessMapper kaosUserAccessMapper;
+    KaosUserAccessCache kaosUserAccessCache;
 
     /**
      * 生成token
@@ -86,14 +86,14 @@ public class TokenService {
     @Transactional
     public String genToken(String userCode, String password) {
         // 检索账户实体
-        KaosUser kaosUser = kaosUserMapper.selectById(userCode);
+        KaosUser kaosUser = kaosUserCache.get(userCode);
         if (kaosUser == null) {
             log.error("用户不存在");
             throw new RuntimeException("用户不存在");
         }
 
         // 检索接入信息
-        KaosUserAccess kaosUserAccess = kaosUserAccessMapper.selectById(userCode);
+        KaosUserAccess kaosUserAccess = kaosUserAccessCache.get(userCode);
         if (kaosUserAccess == null) {
             log.error("用户信息异常, 接入信息不存在");
             throw new RuntimeException("用户信息异常, 接入信息不存在");
@@ -138,14 +138,14 @@ public class TokenService {
         String userCode = decodedJWT.getAudience().get(0);
 
         // 检索账户实体
-        KaosUser kaosUser = kaosUserMapper.selectById(userCode);
+        KaosUser kaosUser = kaosUserCache.get(userCode);
         if (kaosUser == null) {
             log.error("用户不存在");
             throw new RuntimeException("用户不存在");
         }
 
         // 获取接入信息
-        KaosUserAccess kaosUserAccess = kaosUserAccessMapper.selectById(userCode);
+        KaosUserAccess kaosUserAccess = kaosUserAccessCache.get(userCode);
         if (kaosUserAccess == null) {
             log.error("用户信息异常, 接入信息不存在");
             throw new RuntimeException("用户信息异常, 接入信息不存在");
