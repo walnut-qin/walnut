@@ -31,6 +31,7 @@ Configuration:
               filePattern: "${log.path}/info/${project.name}-%d{yyyy-MM-dd}-%i.log"
               PatternLayout:
                   #日志
+                  charset: "UTF-8"
                   pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
               ThresholdFilter:
                   level: INFO
@@ -60,6 +61,7 @@ Configuration:
               filePattern: "${log.path}/warn/${project.name}-%d{yyyy-MM-dd}-%i.log"
               PatternLayout:
                   #日志
+                  charset: "UTF-8"
                   pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
               ThresholdFilter:
                   level: WARN
@@ -89,6 +91,7 @@ Configuration:
               filePattern: "${log.path}/error/${project.name}-%d{yyyy-MM-dd}-%i.log"
               PatternLayout:
                   #日志
+                  charset: "UTF-8"
                   pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
               ThresholdFilter:
                   level: ERROR
