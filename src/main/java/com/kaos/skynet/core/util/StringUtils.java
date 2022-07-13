@@ -4,9 +4,14 @@ import java.util.Arrays;
 
 public final class StringUtils {
     /**
+     * gson包装器
+     */
+    final static GsonWrapper gsonWrapper = new GsonWrapper();
+
+    /**
      * 空字符串
      */
-    final static String EMPTY = "";
+    public final static String EMPTY = "";
 
     /**
      * 比较两个Integer对象是否相等
@@ -86,5 +91,15 @@ public final class StringUtils {
 
         // 计算待补数量
         return repeat(padChar, size - str.length()).concat(str);
+    }
+
+    /**
+     * 格式化
+     * 
+     * @param jsonStr
+     * @return
+     */
+    public static String format(String jsonStr) {
+        return gsonWrapper.format(jsonStr);
     }
 }

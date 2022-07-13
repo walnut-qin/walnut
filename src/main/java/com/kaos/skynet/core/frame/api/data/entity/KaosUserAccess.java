@@ -1,0 +1,73 @@
+package com.kaos.skynet.core.frame.api.data.entity;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.kaos.skynet.core.util.ObjectUtils;
+import com.kaos.skynet.core.util.StringUtils;
+
+import lombok.Data;
+
+@Data
+@TableName("KAOS.KAOS_USER_ACCESS")
+public class KaosUserAccess {
+    /**
+     * 编码
+     */
+    @TableId("USER_CODE")
+    private String userCode;
+
+    /**
+     * 密码(密文)
+     */
+    @TableField("PASSWORD")
+    private String password;
+
+    /**
+     * token掩码，修改后旧token失效
+     */
+    @TableField("TOKEN_MASK")
+    private String tokenMask;
+
+    @Override
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof KaosUserAccess) {
+            var that = (KaosUserAccess) arg0;
+            return StringUtils.equals(this.userCode, that.userCode);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return ObjectUtils.hashCode(userCode);
+    }
+
+    /**
+     * 线程变量
+     */
+    final static ThreadLocal<KaosUserAccess> kaosUserAccess = new ThreadLocal<>();
+
+    /**
+     * 创建用户实体
+     */
+    public static void create(KaosUserAccess newUser) {
+        kaosUserAccess.set(newUser);
+    }
+
+    /**
+     * 销毁用户实体
+     */
+    public static void destroy() {
+        kaosUserAccess.remove();
+    }
+
+    /**
+     * 获取当前登入的用户
+     * 
+     * @return
+     */
+    public static KaosUserAccess getCurrentUserAccess() {
+        return kaosUserAccess.get();
+    }
+}

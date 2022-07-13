@@ -102,6 +102,19 @@
 			<version>1.0.0</version>
 		</dependency>
 
+		<!-- 有效性检查 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+			<version>2.7.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<!-- log4j2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
