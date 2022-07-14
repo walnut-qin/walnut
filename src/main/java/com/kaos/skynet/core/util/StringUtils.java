@@ -1,7 +1,14 @@
 package com.kaos.skynet.core.util;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Base64;
 
+import org.springframework.util.DigestUtils;
+
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public final class StringUtils {
     /**
      * gson包装器
@@ -101,5 +108,62 @@ public final class StringUtils {
      */
     public static String format(String jsonStr) {
         return gsonWrapper.format(jsonStr);
+    }
+
+    /**
+     * base64加密
+     * 
+     * @param source
+     * @return
+     */
+    public static String base64Encode(String source) {
+        if (source == null) {
+            return null;
+        }
+
+        try {
+            return Base64.getEncoder().encodeToString(source.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    /**
+     * base64加密
+     * 
+     * @param source
+     * @return
+     */
+    public static String base64Decode(String source) {
+        if (source == null) {
+            return null;
+        }
+
+        try {
+            return new String(Base64.getDecoder().decode(source), "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    /**
+     * MD5加密
+     * 
+     * @param source
+     * @return
+     */
+    public static String md5DigestAsHex(String source) {
+        if (source == null) {
+            return null;
+        }
+
+        try {
+            return DigestUtils.md5DigestAsHex(source.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 }
