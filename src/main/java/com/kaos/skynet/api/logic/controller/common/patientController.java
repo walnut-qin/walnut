@@ -1,11 +1,13 @@
-package com.kaos.skynet.api.logic.controller.inpatient;
+package com.kaos.skynet.api.logic.controller.common;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
 
 import com.google.common.collect.Maps;
-import com.kaos.skynet.api.data.his.cache.xyhis.FinIprInMainInfoCache;
+import com.kaos.skynet.api.data.his.cache.xyhis.ComPatientInfoCache;
 import com.kaos.skynet.core.type.MediaType;
 import com.kaos.skynet.core.type.annotations.ApiName;
 
@@ -20,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin
 @RestController
-@RequestMapping("/api/inpatient")
-class InpatientController {
+@RequestMapping("/api/common/patient")
+class patientController {
     /**
      * 住院主表缓存
      */
     @Autowired
-    FinIprInMainInfoCache finIprInMainInfoCache;
+    ComPatientInfoCache comPatientInfoCache;
 
     /**
      * 查询患者信息
@@ -35,23 +37,23 @@ class InpatientController {
      * @return
      */
     @ResponseBody
-    @ApiName("获取住院患者信息")
+    @ApiName("获取患者基本信息")
     @RequestMapping(value = "getInfo", method = RequestMethod.GET, produces = MediaType.JSON)
-    Map<String, Object> getInfo(@NotBlank(message = "住院号不能为空") String patientNo) {
+    Map<String, Object> getInfo(@NotBlank(message = "就诊卡号不能为空") String cardNo) {
         // 调用服务
-        var patient = this.finIprInMainInfoCache.get("ZY01".concat(patientNo));
+        var patient = this.comPatientInfoCache.get(cardNo);
         if (patient == null) {
-            throw new RuntimeException("住院号不存在!");
+            throw new RuntimeException("就诊卡不存在!");
         }
 
         // 构造响应体
         Map<String, Object> result = Maps.newHashMap();
-        result.put("patientNo", patient.getPatientNo());
         result.put("cardNo", patient.getCardNo());
-        result.put("deptCode", patient.getDeptCode());
-        result.put("houseDocCode", patient.getHouseDocCode());
-        result.put("chargeDocCode", patient.getChargeDocCode());
-        result.put("chiefDocCode", patient.getChiefDocCode());
+        result.put("name", patient.getName());
+        result.put("sex", patient.getSex());
+        result.put("age", Period.between(patient.getBirthday().toLocalDate(), LocalDate.now()));
+        result.put("idenNo", patient.getIdenNo());
+        result.put("tel", patient.getHomeTel());
 
         return result;
     }
