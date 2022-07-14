@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.Getter;
 
 @Data
-@TableName("XYHIS.FIN_IPR_INMMAININFO")
+@TableName("XYHIS.FIN_IPR_INMAININFO")
 public class FinIprInMainInfo {
     /**
      *

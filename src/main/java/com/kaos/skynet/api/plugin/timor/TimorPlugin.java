@@ -8,7 +8,6 @@ import com.kaos.skynet.core.tool.RestTemplateWrapper;
 import com.kaos.skynet.core.type.Cache;
 import com.kaos.skynet.core.util.LocalDateUtils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +16,12 @@ public class TimorPlugin {
     /**
      * Http句柄
      */
-    RestTemplateWrapper restTemplateWrapper = new RestTemplateWrapper("timor.tech", 80);
+    final RestTemplateWrapper restTemplateWrapper = new RestTemplateWrapper("timor.tech", 80);
 
     /**
      * 缓存
      */
-    @Autowired
-    TimorCache timorCache;
+    final TimorCache timorCache = new TimorCache();
 
     /**
      * 获取日期信息
