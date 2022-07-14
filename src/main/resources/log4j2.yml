@@ -41,6 +41,9 @@ Configuration:
                   SizeBasedTriggeringPolicy:
                       #文件超过多少进行切割
                       size: "100 MB"
+                  TimeBasedTriggeringPolicy:
+                      interval: 1
+                      modulate: true
               DefaultRolloverStrategy:
                   #当天最多有多少个文件存在
                   max: 20
@@ -71,6 +74,9 @@ Configuration:
                   SizeBasedTriggeringPolicy:
                       #文件超过多少进行切割
                       size: "100 MB"
+                  TimeBasedTriggeringPolicy:
+                      interval: 1
+                      modulate: true
               DefaultRolloverStrategy:
                   #当天最多有多少个文件存在
                   max: 20
@@ -101,6 +107,9 @@ Configuration:
                   SizeBasedTriggeringPolicy:
                       #文件超过多少进行切割
                       size: "100 MB"
+                  TimeBasedTriggeringPolicy:
+                      interval: 1
+                      modulate: true
               DefaultRolloverStrategy:
                   #当天最多有多少个文件存在
                   max: 20
