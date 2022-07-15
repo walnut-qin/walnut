@@ -111,8 +111,8 @@ public class UserController {
      * @return
      */
     @ApiName("获取用户信息")
-    @RequestMapping(value = "getInfo", method = RequestMethod.GET, produces = MediaType.JSON)
-    Info.RspBody getInfo() throws Exception {
+    @RequestMapping(value = "info", method = RequestMethod.GET, produces = MediaType.JSON)
+    Info.RspBody info() throws Exception {
         // 获取登入账号信息
         var kaosUser = KaosUser.getCurrentUser();
 
