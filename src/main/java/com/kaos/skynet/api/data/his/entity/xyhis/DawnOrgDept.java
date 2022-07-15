@@ -95,7 +95,8 @@ public class DawnOrgDept {
         Sourth("1", "南院区"),
         North("2", "北院区"),
         East("3", "东津院区"),
-        WanShan("4", "万山分院");
+        WanShan("4", "万山分院"),
+        ZhongYuan("5", "中原社区");
 
         /**
          * 数据库存值
