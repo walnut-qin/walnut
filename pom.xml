@@ -95,11 +95,11 @@
 			</exclusions>
 		</dependency>
 
-		<!-- 本地仓库: ODBC模块 -->
+		<!-- ojdbc -->
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc</artifactId>
-			<version>1.0.0</version>
+			<groupId>com.oracle.ojdbc</groupId>
+			<artifactId>ojdbc10</artifactId>
+			<version>19.3.0.0</version>
 		</dependency>
 
 		<!-- 有效性检查 -->
