@@ -23,7 +23,7 @@ Configuration:
                 onMismatch: DENY
             PatternLayout:
                 #显示日志模板
-                pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+                pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n"
         RollingFile:
             - name: INFO_FILE
               ignoreExceptions: false
@@ -32,7 +32,7 @@ Configuration:
               PatternLayout:
                   #日志
                   charset: "UTF-8"
-                  pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+                  pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n"
               ThresholdFilter:
                   level: INFO
                   onMatch: ACCEPT
@@ -65,7 +65,7 @@ Configuration:
               PatternLayout:
                   #日志
                   charset: "UTF-8"
-                  pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+                  pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n"
               ThresholdFilter:
                   level: WARN
                   onMatch: ACCEPT
@@ -98,7 +98,7 @@ Configuration:
               PatternLayout:
                   #日志
                   charset: "UTF-8"
-                  pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n}{STYLE=Logback}"
+                  pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n"
               ThresholdFilter:
                   level: ERROR
                   onMatch: ACCEPT
