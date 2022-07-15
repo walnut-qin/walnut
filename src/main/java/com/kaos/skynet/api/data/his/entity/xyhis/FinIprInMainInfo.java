@@ -866,13 +866,13 @@ public class FinIprInMainInfo {
 
     /**
      * 
-    */
+     */
     @TableField("CASE_APPROVE_FLAG")
     private String caseApproveFlag;
 
     /**
      *
-    */
+     */
     @TableField("CASE_REASON")
     private String caseReason;
 
