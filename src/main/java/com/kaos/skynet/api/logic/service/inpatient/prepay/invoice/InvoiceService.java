@@ -1,5 +1,6 @@
 package com.kaos.skynet.api.logic.service.inpatient.prepay.invoice;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.kaos.skynet.api.data.his.entity.xyhis.FinComElectronicInvoice;
 import com.kaos.skynet.api.data.his.enums.TransTypeEnum;
@@ -34,7 +35,10 @@ public class InvoiceService {
     @Transactional
     public void fixInvoiceData(String invoiceNo) {
         // 检索中间表数据
-        var data = electronicInvoiceMapper.selectByMultiId(invoiceNo, TransTypeEnum.Positive);
+        var queryWrapper = new LambdaQueryWrapper<FinComElectronicInvoice>();
+        queryWrapper.eq(FinComElectronicInvoice::getInvoiceNo, invoiceNo);
+        queryWrapper.eq(FinComElectronicInvoice::getTransType, TransTypeEnum.Positive);
+        var data = electronicInvoiceMapper.selectOne(queryWrapper);
         if (data == null) {
             log.error("不存在的电子发票数据, invoiceNo = ".concat(invoiceNo));
             throw new RuntimeException("不存在的电子发票数据");
@@ -49,15 +53,13 @@ public class InvoiceService {
 
         // 如果请求结果正常修改数据库
         if (StringUtils.equals(rsp.getCode(), "S0000")) {
-            // 修改信息
-            data.setBillBatchCode(rsp.getData().billBatchCode);
-            data.setBillNo(rsp.getData().billNo);
-            data.setRandom(rsp.getData().random);
-
-            UpdateWrapper<FinComElectronicInvoice> wrapper = new UpdateWrapper<>();
-            wrapper.eq("INVOICE_NO", invoiceNo);
-            wrapper.eq("TRANTYPE", TransTypeEnum.Positive);
-            var cnt = electronicInvoiceMapper.update(data, wrapper);
+            var updateWrapper = new UpdateWrapper<FinComElectronicInvoice>().lambda();
+            updateWrapper.eq(FinComElectronicInvoice::getInvoiceNo, invoiceNo);
+            updateWrapper.eq(FinComElectronicInvoice::getTransType, TransTypeEnum.Positive);
+            updateWrapper.set(FinComElectronicInvoice::getBillBatchCode, rsp.getData().billBatchCode);
+            updateWrapper.set(FinComElectronicInvoice::getBillNo, rsp.getData().billNo);
+            updateWrapper.set(FinComElectronicInvoice::getRandom, rsp.getData().random);
+            var cnt = electronicInvoiceMapper.update(null, updateWrapper);
             if (cnt != 1) {
                 throw new RuntimeException("多条电子发票中间表数据被修改");
             }

@@ -21,6 +21,7 @@ public class FinComElectronicInvoice {
      * HIS内发票号
      */
     @TableId("INVOICE_NO")
+    @TableField("INVOICE_NO")
     private String invoiceNo;
 
     /**
@@ -75,6 +76,7 @@ public class FinComElectronicInvoice {
      * 交易类型
      */
     @TableId("TRANTYPE")
+    @TableField("TRANTYPE")
     private TransTypeEnum transType;
 
     /**

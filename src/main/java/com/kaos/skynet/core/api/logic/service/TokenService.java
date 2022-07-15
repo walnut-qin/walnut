@@ -78,22 +78,21 @@ public class TokenService {
     /**
      * 校验用户并生成token
      * 
-     * @param uid      用户ID
-     * @param pwd      用户密码
-     * @param duration token有效期
+     * @param username 用户ID
+     * @param password 用户密码
      * @return
      */
     @Transactional
-    public String genToken(String userCode, String password) {
+    public String genToken(String username, String password) {
         // 检索账户实体
-        KaosUser kaosUser = kaosUserCache.get(userCode);
+        KaosUser kaosUser = kaosUserCache.get(username);
         if (kaosUser == null) {
             log.error("用户不存在");
             throw new RuntimeException("用户不存在");
         }
 
         // 检索接入信息
-        KaosUserAccess kaosUserAccess = kaosUserAccessCache.get(userCode);
+        KaosUserAccess kaosUserAccess = kaosUserAccessCache.get(username);
         if (kaosUserAccess == null) {
             log.error("用户信息异常, 接入信息不存在");
             throw new RuntimeException("用户信息异常, 接入信息不存在");

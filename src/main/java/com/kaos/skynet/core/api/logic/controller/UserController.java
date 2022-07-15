@@ -73,7 +73,7 @@ public class UserController {
     @RequestMapping(value = "login", method = RequestMethod.POST, produces = MediaType.JSON)
     Login.RspBody login(@RequestBody @Valid Login.ReqBody reqBody) {
         // 校验并生成token
-        String token = tokenService.genToken(reqBody.userCode, reqBody.password);
+        String token = tokenService.genToken(reqBody.username, reqBody.password);
 
         // 生成响应
         var builder = Login.RspBody.builder();
@@ -86,8 +86,8 @@ public class UserController {
             /**
              * 用户ID
              */
-            @NotBlank(message = "账号不能为空")
-            String userCode;
+            @NotBlank(message = "用户名不能为空")
+            String username;
 
             /**
              * 用户密码
@@ -111,8 +111,8 @@ public class UserController {
      * @return
      */
     @ApiName("获取用户信息")
-    @RequestMapping(value = "info", method = RequestMethod.GET, produces = MediaType.JSON)
-    Info.RspBody info() throws Exception {
+    @RequestMapping(value = "getInfo", method = RequestMethod.GET, produces = MediaType.JSON)
+    Info.RspBody getInfo() throws Exception {
         // 获取登入账号信息
         var kaosUser = KaosUser.getCurrentUser();
 

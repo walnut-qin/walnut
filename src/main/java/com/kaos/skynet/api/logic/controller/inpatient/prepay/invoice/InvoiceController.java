@@ -64,7 +64,7 @@ class InvoiceController {
      * @return
      */
     @ResponseBody
-    @ApiName("获取住院患者信息")
+    @ApiName("获取住院患者开过电子发票的预交金")
     @RequestMapping(value = "getInfo", method = RequestMethod.GET, produces = MediaType.JSON)
     List<Map<String, Object>> getBoSoftInvoices(@NotBlank(message = "住院号不能为空") String patientNo) {
         // 调用服务
