@@ -79,7 +79,7 @@ public class departmentController {
         // 调用服务
         var queryWrapper = new LambdaQueryWrapper<DawnOrgDept>();
         queryWrapper.eq(DawnOrgDept::getValid, ValidEnum.VALID);
-        queryWrapper.like(DawnOrgDept::getDeptName, reqBody.keyword.concat("%"));
+        queryWrapper.likeRight(DawnOrgDept::getDeptName, reqBody.keyword);
         var depts = this.dawnOrgDeptMapper.selectList(queryWrapper);
 
         // 构造响应体
