@@ -1,17 +1,24 @@
 package com.kaos.skynet.api.logic.controller.common;
 
+import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Maps;
 import com.kaos.skynet.api.data.his.cache.xyhis.DawnOrgDeptCache;
+import com.kaos.skynet.api.data.his.entity.xyhis.DawnOrgDept;
+import com.kaos.skynet.api.data.his.enums.ValidEnum;
+import com.kaos.skynet.api.data.his.mapper.xyhis.DawnOrgDeptMapper;
 import com.kaos.skynet.core.type.MediaType;
 import com.kaos.skynet.core.type.annotations.ApiName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/common/department")
 public class departmentController {
+    /**
+     * 住院主表缓存
+     */
+    @Autowired
+    DawnOrgDeptMapper dawnOrgDeptMapper;
+
     /**
      * 住院主表缓存
      */
@@ -51,5 +64,40 @@ public class departmentController {
         result.put("deptOwn", dept.getDeptOwn());
 
         return result;
+    }
+
+    /**
+     * 查询患者信息
+     * 
+     * @param cardNo
+     * @return
+     */
+    @ResponseBody
+    @ApiName("获取科室基本信息")
+    @RequestMapping(value = "getInfos", method = RequestMethod.POST, produces = MediaType.JSON)
+    List<Map<String, Object>> getInfos(@RequestBody @Valid GetInfos.ReqBody reqBody) {
+        // 调用服务
+        var queryWrapper = new LambdaQueryWrapper<DawnOrgDept>();
+        queryWrapper.eq(DawnOrgDept::getValid, ValidEnum.VALID);
+        queryWrapper.like(DawnOrgDept::getDeptName, reqBody.keyword.concat("%"));
+        var depts = this.dawnOrgDeptMapper.selectList(queryWrapper);
+
+        // 构造响应体
+        return depts.stream().map(x -> {
+            Map<String, Object> result = Maps.newHashMap();
+            result.put("deptCode", x.getDeptCode());
+            result.put("deptName", x.getDeptName());
+            result.put("deptOwn", x.getDeptOwn());
+            return result;
+        }).toList();
+    }
+
+    static class GetInfos {
+        static class ReqBody {
+            /**
+             * 关键字
+             */
+            String keyword;
+        }
     }
 }
