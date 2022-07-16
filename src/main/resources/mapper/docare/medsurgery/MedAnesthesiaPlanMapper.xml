@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kaos.skynet.api.data.docare.mapper.medsurgery.MedAnesthesiaPlanMapper">
-    <resultMap id="map" type="com.kaos.skynet.api.data.docare.entity.medsurgery.MedAnesthesiaPlan">
+<mapper namespace="com.kaos.walnut.api.data.docare.mapper.medsurgery.MedAnesthesiaPlanMapper">
+    <resultMap id="map" type="com.kaos.walnut.api.data.docare.entity.medsurgery.MedAnesthesiaPlan">
         <id column="PATIENT_ID" jdbcType="VARCHAR" property="patientId"/>
         <id column="VISIT_ID" jdbcType="INTEGER" property="visitId"/>
         <id column="OPER_ID" jdbcType="INTEGER" property="operId"/>
