@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +17,7 @@ import com.kaos.walnut.core.api.data.cache.KaosUserCache;
 import com.kaos.walnut.core.api.data.entity.KaosUser;
 import com.kaos.walnut.core.api.data.entity.KaosUserAccess;
 import com.kaos.walnut.core.type.exceptions.TokenExpireException;
+import com.kaos.walnut.core.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,11 +119,20 @@ public class TokenService {
      * @throws TokenExpireException
      */
     @Transactional
-    public KaosUser checkToken(String token, HttpServletResponse response) throws Exception {
-        // 无token
+    public KaosUser checkToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // 获取token
+        String token = request.getHeader("Token");
         if (token == null) {
             log.error("无token, 请登录");
             throw new RuntimeException("无token, 请登录");
+        }
+
+        // 特殊客户端
+        if (StringUtils.equals(token, "walnut.client")) {
+            KaosUser kaosUser = new KaosUser();
+            kaosUser.setUserCode("walnut.client");
+            kaosUser.setUserName("walnut.client");
+            return kaosUser;
         }
 
         // token解码

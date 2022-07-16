@@ -50,7 +50,7 @@ class TokenInterceptor implements HandlerInterceptor {
         }
 
         // 校验token
-        KaosUser kaosUser = tokenService.checkToken(request.getHeader("Token"), response);
+        KaosUser kaosUser = tokenService.checkToken(request, response);
 
         // 记录用户
         KaosUser.create(kaosUser);
