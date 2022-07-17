@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaos.walnut.api.data.his.mapper.kaos.SurgeryDictMapper">
+    <resultMap id="map" type="com.kaos.walnut.api.data.his.entity.kaos.SurgeryDict">
+        <id column="ICD_CODE" jdbcType="VARCHAR" property="icdCode" />
+        <result column="SURGERY_NAME" jdbcType="VARCHAR" property="surgeryName" />
+        <result column="SURGERY_LEVEL" jdbcType="VARCHAR" property="surgeryLevel" />
+        <result column="VALID" jdbcType="VARCHAR" property="valid" />
+        <result column="OPER_DATE" jdbcType="VARCHAR" property="operDate" />
+        <result column="TELEPROMPTER" jdbcType="VARCHAR" property="teleprompter" />
+    </resultMap>
+
+    <sql id="item">
+        ICD_CODE,
+        SURGERY_NAME,
+        SURGERY_LEVEL,
+        VALID,
+        OPER_DATE,
+        TELEPROMPTER
+    </sql>
+
+    <select id="selectGrantedList" resultMap="map">
+        SELECT
+        <include refid="item" />
+        FROM
+            KAOS.SURGERY_DICT
+        WHERE
+            KAOS.SURGERY_DICT.VALID = 1
+            AND EXISTS (
+                SELECT
+                    1
+                FROM
+                    KAOS.SURGERY_EMPL_PRIV
+                WHERE
+                    KAOS.SURGERY_EMPL_PRIV.ICD_CODE = KAOS.SURGERY_DICT.ICD_CODE
+                    AND KAOS.SURGERY_EMPL_PRIV.EMPL_CODE = #{emplCode}
+                    AND KAOS.SURGERY_EMPL_PRIV.VALID = 1
+            )
+            AND EXISTS (
+                SELECT
+                    1
+                FROM
+                    KAOS.SURGERY_DEPT_PRIV
+                WHERE
+                    KAOS.SURGERY_DEPT_PRIV.ICD_CODE = KAOS.SURGERY_DICT.ICD_CODE
+                    AND KAOS.SURGERY_DEPT_PRIV.DEPT_CODE = #{deptCode}
+                    AND KAOS.SURGERY_DEPT_PRIV.VALID = 1
+            )
+    </select>
+</mapper>
