@@ -17,8 +17,8 @@ class InterceptorConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new TokenInterceptor(tokenService)).addPathPatterns("/api/**");
+        registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new TimerInterceptor()).addPathPatterns("/api/**");
         registry.addInterceptor(new LockInterceptor()).addPathPatterns("/api/**");
 

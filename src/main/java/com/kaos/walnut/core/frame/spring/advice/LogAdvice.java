@@ -3,6 +3,7 @@ package com.kaos.walnut.core.frame.spring.advice;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import com.kaos.walnut.core.frame.spring.interceptor.LogInterceptor;
 import com.kaos.walnut.core.util.ObjectUtils;
 
 import org.springframework.core.MethodParameter;
@@ -31,14 +32,11 @@ class LogAdvice implements RequestBodyAdvice {
     @Override
     public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType,
             Class<? extends HttpMessageConverter<?>> converterType) {
-        // 获取日志构造器
-        var logBuilder = new StringBuilder();
-
         // 加入body
-        logBuilder.append(String.format(" body = %s", ObjectUtils.serialize(body)));
+        LogInterceptor.logBuilder.get().append(String.format(" body = %s", ObjectUtils.serialize(body)));
 
         // 写日志
-        log.info(logBuilder.toString());
+        log.info(LogInterceptor.logBuilder.get().toString());
 
         // 透传body
         return body;

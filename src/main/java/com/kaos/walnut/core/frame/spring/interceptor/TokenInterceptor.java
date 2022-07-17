@@ -12,9 +12,6 @@ import com.kaos.walnut.core.type.annotations.PassToken;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import lombok.extern.log4j.Log4j2;
-
-@Log4j2
 class TokenInterceptor implements HandlerInterceptor {
     /**
      * 核心数据库 - 账户信息接口
@@ -54,11 +51,6 @@ class TokenInterceptor implements HandlerInterceptor {
 
         // 记录用户
         KaosUser.create(kaosUser);
-
-        // 记录日志
-        var logBuilder = new StringBuilder();
-        logBuilder.append(String.format("loginUser = [%s]", kaosUser.getUserName()));
-        log.info(logBuilder.toString());
 
         return true;
     }
