@@ -14,6 +14,7 @@ import com.kaos.walnut.api.data.his.enums.ValidEnum;
 import com.kaos.walnut.api.data.his.mapper.xyhis.DawnOrgDeptMapper;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
+import com.kaos.walnut.core.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -79,7 +80,9 @@ public class departmentController {
         // 调用服务
         var queryWrapper = new LambdaQueryWrapper<DawnOrgDept>();
         queryWrapper.eq(DawnOrgDept::getValid, ValidEnum.VALID);
-        queryWrapper.likeRight(DawnOrgDept::getDeptName, reqBody.keyword);
+        if (!StringUtils.isBlank(reqBody.keyword)) {
+            queryWrapper.likeRight(DawnOrgDept::getDeptName, reqBody.keyword);
+        }
         var depts = this.dawnOrgDeptMapper.selectList(queryWrapper);
 
         // 构造响应体

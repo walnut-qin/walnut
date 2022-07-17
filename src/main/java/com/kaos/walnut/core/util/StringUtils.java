@@ -21,6 +21,19 @@ public final class StringUtils {
     public final static String EMPTY = "";
 
     /**
+     * 判断字符串为空
+     * 
+     * @param s
+     * @return
+     */
+    public static boolean isBlank(String s) {
+        if (s == null || s.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 比较两个Integer对象是否相等
      * 
      * @param s1
