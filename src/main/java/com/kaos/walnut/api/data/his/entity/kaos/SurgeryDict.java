@@ -49,8 +49,8 @@ public class SurgeryDict {
     /**
      * 提词器
      */
-    @TableField("TELEPROMPTER")
-    String teleprompter;
+    @TableField("KEYWORD")
+    String keyword;
 
     @Override
     public boolean equals(Object arg0) {
