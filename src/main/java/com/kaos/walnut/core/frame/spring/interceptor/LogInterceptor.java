@@ -43,7 +43,10 @@ class LogInterceptor implements HandlerInterceptor {
         logBuilder.set(new StringBuilder());
 
         // 用户信息
-        logBuilder.get().append(String.format(" [%s]", KaosUser.getCurrentUser().getUserName()));
+        KaosUser currentUser = KaosUser.getCurrentUser();
+        if (currentUser != null) {
+            logBuilder.get().append(String.format(" [%s]", KaosUser.getCurrentUser().getUserName()));
+        }
 
         // 对注解了ApiName的方法改名
         HandlerMethod handlerMethod = (HandlerMethod) handler;

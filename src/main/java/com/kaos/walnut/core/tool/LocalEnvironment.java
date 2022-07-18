@@ -4,18 +4,19 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
  * 运行环境
  */
 @Component
-public class Environment {
+public class LocalEnvironment {
     /**
      * 系统环境
      */
     @Autowired
-    org.springframework.core.env.Environment env;
+    Environment env;
 
     /**
      * 获取本地IPv4地址

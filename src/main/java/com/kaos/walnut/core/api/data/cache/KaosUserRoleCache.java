@@ -9,7 +9,9 @@ import com.kaos.walnut.core.type.Cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class KaosUserRoleCache extends Cache<String, List<KaosUserRole>> {
     @Autowired
     public KaosUserRoleCache(KaosUserRoleMapper kaosUserRoleMapper) {

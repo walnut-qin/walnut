@@ -12,7 +12,7 @@ import com.kaos.walnut.core.api.data.cache.KaosUserCache;
 import com.kaos.walnut.core.api.data.cache.KaosUserRoleCache;
 import com.kaos.walnut.core.api.data.entity.KaosUser;
 import com.kaos.walnut.core.api.logic.service.TokenService;
-import com.kaos.walnut.core.tool.Environment;
+import com.kaos.walnut.core.tool.LocalEnvironment;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
 import com.kaos.walnut.core.type.annotations.PassToken;
@@ -41,7 +41,7 @@ public class UserController {
      * 环境
      */
     @Autowired
-    Environment env;
+    LocalEnvironment env;
 
     /**
      * 用户接口
