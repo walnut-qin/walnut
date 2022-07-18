@@ -100,15 +100,13 @@ class LogInterceptor implements HandlerInterceptor {
 
         @Override
         public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter,
-                Type targetType,
-                Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
+                Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
             return inputMessage;
         }
 
         @Override
         public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
-                Type targetType,
-                Class<? extends HttpMessageConverter<?>> converterType) {
+                Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
             // 加入body
             logBuilder.get().append(String.format(" body = %s", ObjectUtils.serialize(body)));
 
