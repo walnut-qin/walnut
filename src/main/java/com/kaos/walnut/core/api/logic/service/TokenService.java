@@ -18,6 +18,7 @@ import com.kaos.walnut.core.api.data.cache.KaosUserCache;
 import com.kaos.walnut.core.api.data.entity.KaosUser;
 import com.kaos.walnut.core.api.data.entity.KaosUserAccess;
 import com.kaos.walnut.core.type.exceptions.TokenExpireException;
+import com.kaos.walnut.core.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -133,12 +134,53 @@ public class TokenService {
             throw new RuntimeException("无token, 请登录");
         }
 
+        // 特殊用户 - 重定向用户
+        if (StringUtils.equals(token, "walnut")) {
+            return redirectUser(request);
+        }
+
         // 永久Token
         var kaosEternalToken = kaosEternalTokenCache.get(token);
         if (kaosEternalToken != null) {
             return kaosUserCache.get(kaosEternalToken.getUserCode());
         }
 
+        // 普通用户
+        return getUser(token, response);
+    }
+
+    /**
+     * 重定向用户
+     * 
+     * @param request
+     * @return
+     */
+    private KaosUser redirectUser(HttpServletRequest request) {
+        // 获取特殊头
+        var username = request.getHeader("FakeUser");
+        if (StringUtils.isBlank(username)) {
+            String errMsg = "登陆信息异常, 未指定FakeUser";
+            log.error(errMsg);
+            throw new RuntimeException(errMsg);
+        }
+
+        // 构造User
+        KaosUser kaosUser = new KaosUser();
+        kaosUser.setUserCode(username);
+        kaosUser.setUserName("FakeUser.".concat(username));
+
+        return kaosUser;
+    }
+
+    /**
+     * 解析token获取用户
+     * 
+     * @param token
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    private KaosUser getUser(String token, HttpServletResponse response) throws Exception {
         // token解码
         DecodedJWT decodedJWT = null;
         try {
