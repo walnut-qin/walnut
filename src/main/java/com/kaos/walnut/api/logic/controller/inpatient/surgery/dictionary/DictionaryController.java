@@ -5,13 +5,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Maps;
-import com.kaos.walnut.api.data.his.entity.kaos.SurgeryDeptPriv;
-import com.kaos.walnut.api.data.his.entity.kaos.SurgeryEmplPriv;
-import com.kaos.walnut.api.data.his.mapper.kaos.SurgeryDeptPrivMapper;
+import com.kaos.walnut.api.data.his.cache.kaos.SurgeryDeptPrivCache;
+import com.kaos.walnut.api.data.his.cache.kaos.SurgeryEmplPrivCache;
 import com.kaos.walnut.api.data.his.mapper.kaos.SurgeryDictMapper;
-import com.kaos.walnut.api.data.his.mapper.kaos.SurgeryEmplPrivMapper;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
 
@@ -39,18 +36,18 @@ class DictionaryController {
      * 人员授权表
      */
     @Autowired
-    SurgeryEmplPrivMapper surgeryEmplPrivMapper;
+    SurgeryEmplPrivCache surgeryEmplPrivCache;
 
     /**
      * 科室授权表
      */
     @Autowired
-    SurgeryDeptPrivMapper surgeryDeptPrivMapper;
+    SurgeryDeptPrivCache surgeryDeptPrivCache;
 
     @ResponseBody
     @ApiName("获取授权的手术字典")
-    @RequestMapping(value = "getGrantedInfo", method = RequestMethod.POST, produces = MediaType.JSON)
-    List<Map<String, Object>> getGrantedInfo(@RequestBody @Valid GetInfo.ReqBody reqBody) {
+    @RequestMapping(value = "fetchGrantedInfo", method = RequestMethod.POST, produces = MediaType.JSON)
+    List<Map<String, Object>> fetchGrantedInfo(@RequestBody @Valid GetInfo.ReqBody reqBody) {
         // 检索有授权的手术
         var surgeryDicts = surgeryDictMapper.selectGrantedList(reqBody.emplCode, reqBody.deptCode);
 
@@ -62,15 +59,11 @@ class DictionaryController {
             result.put("surgeryLevel", x.getSurgeryLevel());
             result.put("keyword", x.getKeyword());
             // 授权人员名单
-            var emplWrapper = new LambdaQueryWrapper<SurgeryEmplPriv>();
-            emplWrapper.eq(SurgeryEmplPriv::getIcdCode, x.getIcdCode());
-            var emplList = surgeryEmplPrivMapper.selectList(emplWrapper).stream().map(y -> y.getEmplCode()).toList();
+            var emplList = surgeryEmplPrivCache.get(x.getIcdCode()).stream().map(y -> y.getEmplCode()).toList();
             result.put("employee", emplList);
             result.put("employeeString", String.join(",", emplList));
             // 授权科室名单
-            var deptWrapper = new LambdaQueryWrapper<SurgeryDeptPriv>();
-            deptWrapper.eq(SurgeryDeptPriv::getIcdCode, x.getIcdCode());
-            var deptList = surgeryDeptPrivMapper.selectList(deptWrapper).stream().map(y -> y.getDeptCode()).toList();
+            var deptList = surgeryDeptPrivCache.get(x.getIcdCode()).stream().map(y -> y.getDeptCode()).toList();
             result.put("department", deptList);
             result.put("departmentString", String.join(",", deptList));
             return result;

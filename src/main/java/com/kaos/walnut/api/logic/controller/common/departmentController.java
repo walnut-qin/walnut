@@ -75,8 +75,8 @@ public class departmentController {
      */
     @ResponseBody
     @ApiName("获取科室基本信息")
-    @RequestMapping(value = "getInfos", method = RequestMethod.POST, produces = MediaType.JSON)
-    List<Map<String, Object>> getInfos(@RequestBody @Valid GetInfos.ReqBody reqBody) {
+    @RequestMapping(value = "fetchInfos", method = RequestMethod.POST, produces = MediaType.JSON)
+    List<Map<String, Object>> fetchInfos(@RequestBody @Valid GetInfos.ReqBody reqBody) {
         // 调用服务
         var queryWrapper = new LambdaQueryWrapper<DawnOrgDept>();
         queryWrapper.eq(DawnOrgDept::getValid, ValidEnum.VALID);
