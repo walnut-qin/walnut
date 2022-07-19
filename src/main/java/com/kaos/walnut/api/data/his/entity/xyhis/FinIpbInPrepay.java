@@ -265,13 +265,11 @@ public class FinIpbInPrepay {
         /**
          * 数据库存值
          */
-        @TableField("")
         private String value;
 
         /**
          * 描述存值
          */
-        @TableField("")
         private String description;
     }
 
@@ -289,13 +287,11 @@ public class FinIpbInPrepay {
         /**
          * 数据库存值
          */
-        @TableField("")
         private String value;
 
         /**
          * 描述存值
          */
-        @TableField("")
         private String description;
     }
 }

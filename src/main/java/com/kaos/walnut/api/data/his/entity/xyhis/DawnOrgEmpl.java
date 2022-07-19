@@ -125,6 +125,7 @@ public class DawnOrgEmpl {
     /**
      * 职务
      */
+    @Getter
     @AllArgsConstructor
     public static enum PositionEnum implements Enum {
         院长("1", "院长"),
@@ -135,19 +136,18 @@ public class DawnOrgEmpl {
         /**
          * 数据库存值
          */
-        @Getter
         private String value;
 
         /**
          * 描述存值
          */
-        @Getter
         private String description;
     }
 
     /**
      * 职级
      */
+    @Getter
     @AllArgsConstructor
     public static enum RankEnum implements Enum {
         特殊津贴专家("1", "特殊津贴专家"),
@@ -163,13 +163,11 @@ public class DawnOrgEmpl {
         /**
          * 数据库存值
          */
-        @Getter
         private String value;
 
         /**
          * 描述存值
          */
-        @Getter
         private String description;
     }
 
@@ -191,13 +189,11 @@ public class DawnOrgEmpl {
         /**
          * 数据库存值
          */
-        @Getter
         private String value;
 
         /**
          * 描述存值
          */
-        @Getter
         private String description;
     }
 }
