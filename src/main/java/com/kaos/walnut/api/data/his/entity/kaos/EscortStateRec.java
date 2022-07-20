@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.kaos.walnut.core.type.Enum;
+import com.kaos.walnut.core.util.IntegerUtils;
+import com.kaos.walnut.core.util.ObjectUtils;
+import com.kaos.walnut.core.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,6 +55,20 @@ public class EscortStateRec {
     @TableField("REMARK")
     String remark;
 
+    @Override
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof EscortStateRec) {
+            var that = (EscortStateRec) arg0;
+            return StringUtils.equals(this.escortNo, that.escortNo)
+                    && IntegerUtils.equals(this.recNo, that.recNo);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return ObjectUtils.hashCode(escortNo, recNo);
+    }
 
     @Getter
     @AllArgsConstructor

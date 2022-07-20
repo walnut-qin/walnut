@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.kaos.walnut.core.util.IntegerUtils;
+import com.kaos.walnut.core.util.ObjectUtils;
+import com.kaos.walnut.core.util.StringUtils;
 
 import lombok.Data;
 
@@ -43,4 +46,18 @@ public class EscortVip {
     @TableField("REMARK")
     String remark;
 
+    @Override
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof EscortVip) {
+            var that = (EscortVip) arg0;
+            return StringUtils.equals(this.patientCardNo, that.patientCardNo)
+                    && IntegerUtils.equals(this.happenNo, that.happenNo);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return ObjectUtils.hashCode(patientCardNo, happenNo);
+    }
 }
