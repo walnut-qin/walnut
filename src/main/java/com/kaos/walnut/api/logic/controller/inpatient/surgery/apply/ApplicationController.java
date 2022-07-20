@@ -38,7 +38,7 @@ public class ApplicationController {
      * @return
      */
     @ResponseBody
-    @ApiName("获取住院患者信息")
+    @ApiName("获取手术申请单信息")
     @RequestMapping(value = "getInfo", method = RequestMethod.GET, produces = MediaType.JSON)
     Map<String, Object> getInfo(@NotBlank(message = "住院号不能为空") String applyNo) {
         // 检索手术申请单
