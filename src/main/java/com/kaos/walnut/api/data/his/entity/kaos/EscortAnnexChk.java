@@ -4,9 +4,14 @@ import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
 
+import lombok.Data;
+
+@Data
+@TableName("KAOS.ESCORT_ANNEX_CHK")
 public class EscortAnnexChk {
     /**
      * 附件
