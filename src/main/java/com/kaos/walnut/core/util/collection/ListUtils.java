@@ -1,4 +1,4 @@
-package com.kaos.walnut.core.util;
+package com.kaos.walnut.core.util.collection;
 
 import java.util.List;
 

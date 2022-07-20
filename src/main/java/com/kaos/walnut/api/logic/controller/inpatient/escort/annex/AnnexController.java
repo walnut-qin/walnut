@@ -19,7 +19,7 @@ import com.kaos.walnut.api.data.his.mapper.kaos.EscortMainInfoMapper;
 import com.kaos.walnut.api.data.his.mapper.xyhis.FinIprInMainInfoMapper;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
-import com.kaos.walnut.core.util.ListUtils;
+import com.kaos.walnut.core.util.collection.ListUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -75,10 +75,10 @@ class AnnexController {
         var patients = finIprInMainInfoMapper.selectList(patientQueryWrapper);
 
         // 检索陪护
-        Set<String> helperCardNos = Sets.newHashSet();
+        Set<String> helperCardNo = Sets.newHashSet();
         patients.forEach(x -> {
             escortMainInfoMapper.selectByPatient(x.getCardNo(), true).forEach(y -> {
-                helperCardNos.add(y.getHelperCardNo());
+                helperCardNo.add(y.getHelperCardNo());
             });
         });
 
@@ -90,7 +90,7 @@ class AnnexController {
         result.put("unchecked", unchecked);
 
         // 处理所有陪护人
-        helperCardNos.forEach(x -> {
+        helperCardNo.forEach(x -> {
             // 创建分发篓
             List<EscortAnnexInfo> trueList = Lists.newLinkedList();
             List<EscortAnnexInfo> falseList = Lists.newLinkedList();
@@ -109,6 +109,7 @@ class AnnexController {
                 var chk = escortAnnexChkMapper.selectById(inf.getAnnexNo());
                 Map<String, Object> resultItem = Maps.newHashMap();
                 resultItem.put("annexNo", inf.getAnnexNo());
+                resultItem.put("cardNo", inf.getCardNo());
                 resultItem.put("annexUrl", inf.getAnnexUrl());
                 resultItem.put("negative", chk.getNegative());
                 resultItem.put("execDate", chk.getExecDate());
@@ -118,6 +119,7 @@ class AnnexController {
                 var inf = trueList.get(0);
                 Map<String, Object> resultItem = Maps.newHashMap();
                 resultItem.put("annexNo", inf.getAnnexNo());
+                resultItem.put("cardNo", inf.getCardNo());
                 resultItem.put("annexUrl", inf.getAnnexUrl());
                 checked.add(resultItem);
             }
