@@ -7,9 +7,9 @@
 		<version>2.7.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.kaos</groupId>
-	<artifactId>walnut</artifactId>
-	<version>1.0.1</version>
+	<groupId>com.walnut</groupId>
+	<artifactId>walnut-core</artifactId>
+	<version>1.0.0</version>
 	<name>walnut</name>
 	<description>walnut system</description>
 	<properties>
