@@ -28,7 +28,7 @@ spring:
                 url-pattern: /api/*
                 exclusions: .gif,.html
         dynamic:
-            primary: walnut
+            primary: his
             strict: false
             druid:
                 # 初始化时建立链接数量
@@ -60,13 +60,17 @@ spring:
                 # 合并多个DruidDataSource的监控数据
                 use-global-data-source-stat: false
             datasource:
-                walnut:
+                his:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
-                    username: KAOS
-                    password: KAOS
+                    username: xyhis
+                    password: zhmz13886256909
+                docare:
+                    url: jdbc:oracle:thin:@//192.168.10.150:1521/docare
+                    username: SYSTEM
+                    password: DOCARE
 mybatis-plus:
     configuration:
-        default-enum-type-handler: com.walnut.core.frame.mybatis.EnumTypeHandler
+        default-enum-type-handler: com.kaos.walnut.core.frame.mybatis.EnumTypeHandler
         jdbc-type-for-null: "null"
     mapper-locations:
         - classpath:mapper/**/*.xml
