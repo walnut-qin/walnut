@@ -1,4 +1,4 @@
-package com.walnut;
+package com.kaos.walnut;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
