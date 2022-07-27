@@ -529,6 +529,12 @@ public class MetOpsApply {
     @TableField("ICU_FLAG")
     Boolean icuFlag;
 
+    /**
+     * 高值耗材（骨科专用）
+     */
+    @TableField("HIGH_VALUE_CONSUMABLES")
+    String highValueConsumables;
+
     @Override
     public boolean equals(Object arg0) {
         if (arg0 instanceof MetOpsApply) {
