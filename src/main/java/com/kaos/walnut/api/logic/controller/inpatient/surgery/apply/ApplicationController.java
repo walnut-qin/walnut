@@ -53,6 +53,7 @@ public class ApplicationController {
         Map<String, Object> result = Maps.newHashMap();
         result.put("applyNo", applyInfo.getApplyNo());
         result.put("icuFlag", applyInfo.getIcuFlag());
+        result.put("highValueConsumables", applyInfo.getHighValueConsumables());
 
         return result;
     }
