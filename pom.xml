@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.kaos</groupId>
 	<artifactId>walnut</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>walnut</name>
 	<description>walnut system</description>
 	<properties>
