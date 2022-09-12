@@ -1,8 +1,11 @@
 package com.kaos.walnut.api.logic.controller.inpatient.surgery.apply.config;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotBlank;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Maps;
 import com.kaos.walnut.api.data.his.entity.kaos.ConfigList;
 import com.kaos.walnut.api.data.his.mapper.kaos.ConfigListMapper;
 import com.kaos.walnut.core.type.MediaType;
@@ -36,7 +39,7 @@ class ConfigController {
     @ResponseBody
     @ApiName("获取高值耗材功能开关")
     @RequestMapping(value = "isHighValueConsumableEmpl", method = RequestMethod.GET, produces = MediaType.JSON)
-    Boolean isHighValueConsumableEmpl(@NotBlank(message = "员工编码不能为空") String emplCode) {
+    Map<String, Object> isHighValueConsumableEmpl(@NotBlank(message = "员工编码不能为空") String emplCode) {
         // 检索手术申请单
         var queryWrapper = new LambdaQueryWrapper<ConfigList>();
         queryWrapper.eq(ConfigList::getName, "SHVC_Empl");
@@ -45,11 +48,13 @@ class ConfigController {
         var result = configListMapper.selectOne(queryWrapper);
 
         // 未查询到开关
+        Map<String, Object> response = Maps.newHashMap();
         if (result == null) {
-            return false;
+            response.put("result", false);
+        } else {
+            response.put("result", true);
         }
-
-        return true;
+        return response;
     }
 
     /**
@@ -61,7 +66,7 @@ class ConfigController {
     @ResponseBody
     @ApiName("获取高值耗材功能开关")
     @RequestMapping(value = "isHighValueConsumableDept", method = RequestMethod.GET, produces = MediaType.JSON)
-    Boolean isHighValueConsumableDept(@NotBlank(message = "科室编码不能为空") String deptCode) {
+    Map<String, Object> isHighValueConsumableDept(@NotBlank(message = "科室编码不能为空") String deptCode) {
         // 检索手术申请单
         var queryWrapper = new LambdaQueryWrapper<ConfigList>();
         queryWrapper.eq(ConfigList::getName, "SHVC_Dept");
@@ -70,10 +75,12 @@ class ConfigController {
         var result = configListMapper.selectOne(queryWrapper);
 
         // 未查询到开关
+        Map<String, Object> response = Maps.newHashMap();
         if (result == null) {
-            return false;
+            response.put("result", false);
+        } else {
+            response.put("result", true);
         }
-
-        return true;
+        return response;
     }
 }
