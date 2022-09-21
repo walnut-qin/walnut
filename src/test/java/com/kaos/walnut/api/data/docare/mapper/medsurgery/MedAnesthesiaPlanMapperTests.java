@@ -11,6 +11,6 @@ public class MedAnesthesiaPlanMapperTests {
 
     @Test
     void selectByMultiId() {
-        medAnesthesiaPlanMapper.selectByMultiId("0123456789", 1, 1);
+        // medAnesthesiaPlanMapper.selectByMultiId("0123456789", 1, 1);
     }
 }

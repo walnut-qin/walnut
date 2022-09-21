@@ -64,10 +64,10 @@ spring:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
                     username: xyhis
                     password: zhmz13886256909
-                docare:
-                    url: jdbc:oracle:thin:@//192.168.10.150:1521/docare
-                    username: SYSTEM
-                    password: DOCARE
+                # docare:
+                #     url: jdbc:oracle:thin:@//192.168.10.150:1521/docare
+                #     username: SYSTEM
+                #     password: DOCARE
 mybatis-plus:
     configuration:
         default-enum-type-handler: com.kaos.walnut.core.frame.mybatis.EnumTypeHandler
