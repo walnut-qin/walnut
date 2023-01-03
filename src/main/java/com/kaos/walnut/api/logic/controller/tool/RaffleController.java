@@ -3,7 +3,6 @@ package com.kaos.walnut.api.logic.controller.tool;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -106,7 +105,6 @@ class RaffleController {
              * 数量
              */
             @NotNull(message = "奖品数量不能为空")
-            @Min(value = 1, message = "奖品数量最小为1")
             Integer count;
         }
     }
