@@ -5,6 +5,8 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.kaos.walnut.api.data.his.entity.kaos.RaffleFeaturePool;
+import com.kaos.walnut.api.data.his.entity.kaos.RaffleLog;
+import com.kaos.walnut.api.data.his.mapper.SequenceMapper;
 import com.kaos.walnut.api.data.his.mapper.kaos.RaffleFeaturePoolMapper;
 import com.kaos.walnut.api.data.his.mapper.kaos.RaffleLogMapper;
 
@@ -25,6 +27,12 @@ public class RaffleService {
      */
     @Autowired
     RaffleLogMapper raffleLogMapper;
+
+    /**
+     * 序列接口
+     */
+    @Autowired
+    SequenceMapper sequenceMapper;
 
     /**
      * 临时添加奖品
@@ -55,5 +63,81 @@ public class RaffleService {
         queryWrapper.orderByAsc(RaffleFeaturePool::getFeature);
         raffleFeaturePoolMapper.selectList(queryWrapper);
         return raffleFeaturePoolMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 抽奖一次
+     * 
+     * @param name
+     * @return
+     */
+    private void raffle(String name) {
+        // 获取当前奖池
+        var queryWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
+        queryWrapper.orderByAsc(RaffleFeaturePool::getFeature);
+        var items = raffleFeaturePoolMapper.selectList(queryWrapper);
+
+        // 产生随机数
+        var idx = (int) Math.floor(Math.random() * items.size());
+
+        // 锁定奖池
+        var item = items.get(idx);
+
+        // 若此为最后一个奖项，则删除记录，否则数量减一
+        if (item.getCount() == 1) {
+            raffleFeaturePoolMapper.deleteById(item.getFeature());
+        } else {
+            var wrapper = new UpdateWrapper<RaffleFeaturePool>().lambda();
+            wrapper.eq(RaffleFeaturePool::getFeature, item.getFeature());
+            wrapper.set(RaffleFeaturePool::getCount, item.getCount() - 1);
+            raffleFeaturePoolMapper.update(null, wrapper);
+        }
+
+        // 插入抽奖记录
+        var builder = RaffleLog.builder();
+        builder.key(Integer.parseInt(sequenceMapper.query("KAOS.SEQ_RAFFLE_LOG_KEY")));
+        builder.name(name);
+        builder.feature(item.getFeature());
+        raffleLogMapper.insert(builder.build());
+    }
+
+    /**
+     * 抽奖一次
+     * 
+     * @param name
+     * @return
+     */
+    @Transactional
+    public void raffleOnce(String name) {
+        // 查询奖池
+        var queryWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
+        queryWrapper.orderByAsc(RaffleFeaturePool::getFeature);
+        var poolItems = raffleFeaturePoolMapper.selectList(queryWrapper);
+        if (poolItems.isEmpty()) {
+            throw new RuntimeException("奖池已空！");
+        }
+
+        // 可以抽奖
+        this.raffle(name);
+    }
+
+    /**
+     * 列表抽奖
+     * 
+     * @param names
+     */
+    public void raffleList(List<String> names) {
+        // 查询奖池
+        var queryWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
+        queryWrapper.orderByAsc(RaffleFeaturePool::getFeature);
+        var poolItems = raffleFeaturePoolMapper.selectList(queryWrapper);
+        if (poolItems.size() < names.size()) {
+            throw new RuntimeException("奖池数量不支持一轮抽奖！");
+        }
+
+        // 可以抽奖
+        for (String name : names) {
+            this.raffle(name);
+        }
     }
 }
