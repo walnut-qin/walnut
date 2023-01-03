@@ -52,7 +52,7 @@ class RaffleController {
 
     @ResponseBody
     @ApiName("获取抽奖日志")
-    @RequestMapping(value = "queryRaffleLogs", method = RequestMethod.GET)
+    @RequestMapping(value = "queryRaffleLogs", method = RequestMethod.GET, produces = MediaType.JSON)
     List<RaffleLog> queryRaffleLogs() throws Exception {
         // 查询抽奖记录日志
         var logWrapper = new QueryWrapper<RaffleLog>().lambda();
@@ -64,7 +64,7 @@ class RaffleController {
 
     @ResponseBody
     @ApiName("获取奖池数据")
-    @RequestMapping(value = "queryFeaturePool", method = RequestMethod.GET)
+    @RequestMapping(value = "queryFeaturePool", method = RequestMethod.GET, produces = MediaType.JSON)
     List<RaffleFeaturePool> queryFeaturePool() throws Exception {
         // 查询奖池数据
         var poolWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
