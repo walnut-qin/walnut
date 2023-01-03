@@ -41,7 +41,7 @@ public class RaffleService {
      * @param count
      */
     @Transactional
-    public List<RaffleFeaturePool> addFeature(String feature, Integer count) {
+    public void addFeature(String feature, Integer count) {
         // 查询当前奖池中是否含有该奖品
         var poolItem = raffleFeaturePoolMapper.selectById(feature);
         if (poolItem != null) {
@@ -57,12 +57,35 @@ public class RaffleService {
             builder.count(count);
             raffleFeaturePoolMapper.insert(builder.build());
         }
+    }
 
-        // 重新查询记录
-        var queryWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
-        queryWrapper.orderByAsc(RaffleFeaturePool::getFeature);
-        raffleFeaturePoolMapper.selectList(queryWrapper);
-        return raffleFeaturePoolMapper.selectList(queryWrapper);
+    /**
+     * 回退一个奖品
+     * 
+     * @param raffleLog
+     */
+    private void cancel(RaffleLog raffleLog) {
+        // 删除抽奖记录
+        raffleLogMapper.deleteById(raffleLog.getKey());
+
+        // 添加奖品
+        this.addFeature(raffleLog.getFeature(), 1);
+    }
+
+    /**
+     * 回退所有奖品
+     */
+    @Transactional
+    public void cancelAll() {
+        // 检索所有抽奖记录
+        var queryWrapper = new QueryWrapper<RaffleLog>().lambda();
+        queryWrapper.orderByAsc(RaffleLog::getKey);
+        var logItems = raffleLogMapper.selectList(queryWrapper);
+
+        // 依次退回
+        for (RaffleLog raffleLog : logItems) {
+            this.cancel(raffleLog);
+        }
     }
 
     /**
