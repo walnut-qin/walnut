@@ -51,6 +51,30 @@ class RaffleController {
     RaffleFeaturePoolMapper raffleFeaturePoolMapper;
 
     @ResponseBody
+    @ApiName("获取抽奖日志")
+    @RequestMapping(value = "queryRaffleLogs", method = RequestMethod.GET)
+    List<RaffleLog> queryRaffleLogs() throws Exception {
+        // 查询抽奖记录日志
+        var logWrapper = new QueryWrapper<RaffleLog>().lambda();
+        logWrapper.orderByAsc(RaffleLog::getKey);
+
+        // 构造响应
+        return raffleLogMapper.selectList(logWrapper);
+    }
+
+    @ResponseBody
+    @ApiName("获取奖池数据")
+    @RequestMapping(value = "queryFeaturePool", method = RequestMethod.GET)
+    List<RaffleFeaturePool> queryFeaturePool() throws Exception {
+        // 查询奖池数据
+        var poolWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
+        poolWrapper.orderByAsc(RaffleFeaturePool::getFeature);
+
+        // 构造响应
+        return raffleFeaturePoolMapper.selectList(poolWrapper);
+    }
+
+    @ResponseBody
     @ApiName("退回所有奖品")
     @RequestMapping(value = "cancelAll", method = RequestMethod.POST, produces = MediaType.JSON)
     Object cancelAll() throws Exception {
@@ -88,30 +112,6 @@ class RaffleController {
     }
 
     @ResponseBody
-    @ApiName("获取抽奖日志")
-    @RequestMapping(value = "queryRaffleLogs", method = RequestMethod.GET)
-    List<RaffleLog> queryRaffleLogs() throws Exception {
-        // 查询抽奖记录日志
-        var logWrapper = new QueryWrapper<RaffleLog>().lambda();
-        logWrapper.orderByAsc(RaffleLog::getKey);
-
-        // 构造响应
-        return raffleLogMapper.selectList(logWrapper);
-    }
-
-    @ResponseBody
-    @ApiName("获取奖池数据")
-    @RequestMapping(value = "queryFeaturePool", method = RequestMethod.GET)
-    List<RaffleFeaturePool> queryFeaturePool() throws Exception {
-        // 查询奖池数据
-        var poolWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
-        poolWrapper.orderByAsc(RaffleFeaturePool::getFeature);
-
-        // 构造响应
-        return raffleFeaturePoolMapper.selectList(poolWrapper);
-    }
-
-    @ResponseBody
     @ApiName("单次抽奖")
     @RequestMapping(value = "raffleOnce", method = RequestMethod.POST)
     Object raffleOnce(@RequestBody @Valid RaffleOnce.ReqBody reqBody) throws Exception {
@@ -132,7 +132,7 @@ class RaffleController {
     }
 
     @ResponseBody
-    @ApiName("单次抽奖")
+    @ApiName("列表抽奖")
     @RequestMapping(value = "raffleList", method = RequestMethod.POST)
     Object raffleList(@RequestBody @Valid RaffleList.ReqBody reqBody) throws Exception {
         // 执行业务

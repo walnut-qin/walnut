@@ -1,5 +1,10 @@
 package com.kaos.walnut.api.data.his.mapper;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
+
+import org.apache.ibatis.annotations.Param;
+
+@DS("his")
 public interface SequenceMapper {
     /**
      * 查询序列的值
@@ -7,5 +12,5 @@ public interface SequenceMapper {
      * @param seqName
      * @return
      */
-    String query(String seqName);
+    String query(@Param("seqName") String seqName);
 }
