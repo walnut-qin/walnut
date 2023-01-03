@@ -3,9 +3,9 @@ package com.kaos.walnut.api.logic.controller.tool;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.kaos.walnut.api.data.his.entity.kaos.RaffleFeaturePool;
 import com.kaos.walnut.api.logic.service.tool.RaffleService;
@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.log4j.Log4j2;
-
-@Log4j2
 @Validated
 @CrossOrigin
 @RestController
@@ -39,9 +36,7 @@ class RaffleController {
     @ApiName("添加奖品")
     @RequestMapping(value = "addFeature", method = RequestMethod.POST, produces = MediaType.JSON)
     List<RaffleFeaturePool> addFeature(@RequestBody @Valid AddFeature.ReqBody reqBody) throws Exception {
-        // 记录日志
-        log.info(String.format("添加奖品：%d 个 %s", reqBody.feature, reqBody.count));
-
+        // 调用业务
         return raffleService.addFeature(reqBody.feature, reqBody.count);
     }
 
@@ -57,7 +52,7 @@ class RaffleController {
              * 数量
              */
             @NotNull(message = "奖品数量不能为空")
-            @Size(min = 1, message = "奖品数量最小为1")
+            @Min(value = 1, message = "奖品数量最小为1")
             Integer count;
         }
     }
