@@ -45,12 +45,22 @@ public class RaffleService {
         // 查询当前奖池中是否含有该奖品
         var poolItem = raffleFeaturePoolMapper.selectById(feature);
         if (poolItem != null) {
-            // 记录存在，更新数量
-            var wrapper = new UpdateWrapper<RaffleFeaturePool>().lambda();
-            wrapper.eq(RaffleFeaturePool::getFeature, feature);
-            wrapper.set(RaffleFeaturePool::getCount, poolItem.getCount() + count);
-            raffleFeaturePoolMapper.update(null, wrapper);
+            if (poolItem.getCount() + count > 0) {
+                // 记录存在，更新数量
+                var wrapper = new UpdateWrapper<RaffleFeaturePool>().lambda();
+                wrapper.eq(RaffleFeaturePool::getFeature, feature);
+                wrapper.set(RaffleFeaturePool::getCount, poolItem.getCount() + count);
+                raffleFeaturePoolMapper.update(null, wrapper);
+            } else if (poolItem.getCount() + count == 0) {
+                raffleFeaturePoolMapper.deleteById(poolItem.getFeature());
+            } else {
+                throw new RuntimeException("剩余数量不足！");
+            }
         } else {
+            // 负值判断
+            if (count <= 0) {
+                throw new RuntimeException("数量异常！");
+            }
             // 添加新纪录
             var builder = RaffleFeaturePool.builder();
             builder.feature(feature);
@@ -154,7 +164,9 @@ public class RaffleService {
         var queryWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
         queryWrapper.orderByAsc(RaffleFeaturePool::getFeature);
         var poolItems = raffleFeaturePoolMapper.selectList(queryWrapper);
-        if (poolItems.size() < names.size()) {
+        if (poolItems.stream().mapToInt(x -> {
+            return x.getCount();
+        }).sum() < names.size()) {
             throw new RuntimeException("奖池数量不支持一轮抽奖！");
         }
 
