@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.Builder;
-
 @Validated
 @CrossOrigin
 @RestController
@@ -90,37 +88,27 @@ class RaffleController {
     }
 
     @ResponseBody
-    @ApiName("获取抽奖数据")
-    @RequestMapping(value = "queryData", method = RequestMethod.GET)
-    QueryData.RspBody queryData() throws Exception {
+    @ApiName("获取抽奖日志")
+    @RequestMapping(value = "queryRaffleLogs", method = RequestMethod.GET)
+    List<RaffleLog> queryRaffleLogs() throws Exception {
         // 查询抽奖记录日志
         var logWrapper = new QueryWrapper<RaffleLog>().lambda();
         logWrapper.orderByAsc(RaffleLog::getKey);
 
+        // 构造响应
+        return raffleLogMapper.selectList(logWrapper);
+    }
+
+    @ResponseBody
+    @ApiName("获取奖池数据")
+    @RequestMapping(value = "queryFeaturePool", method = RequestMethod.GET)
+    List<RaffleFeaturePool> queryFeaturePool() throws Exception {
         // 查询奖池数据
         var poolWrapper = new QueryWrapper<RaffleFeaturePool>().lambda();
         poolWrapper.orderByAsc(RaffleFeaturePool::getFeature);
 
         // 构造响应
-        var builder = QueryData.RspBody.builder();
-        builder.raffleLogs(raffleLogMapper.selectList(logWrapper));
-        builder.featurePools(raffleFeaturePoolMapper.selectList(poolWrapper));
-        return builder.build();
-    }
-
-    static class QueryData {
-        @Builder
-        static class RspBody {
-            /**
-             * 抽奖记录
-             */
-            List<RaffleLog> raffleLogs;
-
-            /**
-             * 奖池数据
-             */
-            List<RaffleFeaturePool> featurePools;
-        }
+        return raffleFeaturePoolMapper.selectList(poolWrapper);
     }
 
     @ResponseBody
@@ -145,7 +133,7 @@ class RaffleController {
 
     @ResponseBody
     @ApiName("单次抽奖")
-    @RequestMapping(value = "raffleOnce", method = RequestMethod.POST)
+    @RequestMapping(value = "raffleList", method = RequestMethod.POST)
     Object raffleList(@RequestBody @Valid RaffleList.ReqBody reqBody) throws Exception {
         // 执行业务
         this.raffleService.raffleList(reqBody.names);
