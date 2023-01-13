@@ -83,6 +83,22 @@ public class RaffleService {
     }
 
     /**
+     * 回退一个奖品
+     * 
+     * @param key
+     */
+    public void cancel(Integer key) {
+        // 检索奖品
+        var item = raffleLogMapper.selectById(key);
+        if (item == null) {
+            return;
+        }
+
+        // 回退
+        this.cancel(item);
+    }
+
+    /**
      * 回退所有奖品
      */
     @Transactional

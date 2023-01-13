@@ -74,6 +74,26 @@ class RaffleController {
     }
 
     @ResponseBody
+    @ApiName("退回单个奖品")
+    @RequestMapping(value = "cancel", method = RequestMethod.POST, produces = MediaType.JSON)
+    Object cancel(@RequestBody @Valid Cancel.ReqBody reqBody) throws Exception {
+        // 调用业务
+        raffleService.cancel(reqBody.key);
+
+        return ObjectUtils.EMPTY;
+    }
+
+    static class Cancel {
+        static class ReqBody {
+            /**
+             * 奖品名称
+             */
+            @NotNull(message = "退回奖品的key值不能为空")
+            Integer key;
+        }
+    }
+
+    @ResponseBody
     @ApiName("退回所有奖品")
     @RequestMapping(value = "cancelAll", method = RequestMethod.POST, produces = MediaType.JSON)
     Object cancelAll() throws Exception {
