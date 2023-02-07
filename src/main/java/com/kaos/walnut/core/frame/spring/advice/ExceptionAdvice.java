@@ -19,6 +19,7 @@ class ExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Wrapper exceptionHandler(Exception ex) {
+        log.error(ex.getMessage());
         return new Wrapper(-1, ex.getMessage(), null);
     }
 
