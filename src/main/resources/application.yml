@@ -31,46 +31,45 @@ spring:
             primary: master
             strict: false
             druid:
-                # 初始化时建立链接数量
+                # 连接池容量配置
                 initial-size: 40
-                # 最小连接池数量
                 min-idle: 20
-                # 最大连接池数量
                 max-active: 60
+
                 # 获取链接时最大等待时间，单位：毫秒
-                max-wait: 5000
-                # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
-                test-while-idle: true
-                # 既作为检测的间隔时间又作为test-While-Idel执行的依据
+                max-wait: 6000
+
+                # 检测时间间隔
                 time-between-eviction-runs-millis: 2000
-                # 保持链接活性
-                keep-alive: true
+
                 # 销毁线程时检测当前连接的最后活动时间和当前时间差大于该值时，关闭当前连接
-                min-evictable-idle-time-millis: 200000
-                # 用来检测连接是否有效的sql 必须是一个查询语句
+                min-evictable-idle-time-millis: 600000
+                max-evictable-idle-time-millis: 900000
+
+                # 检测手段
                 validation-query: select 1 from dual
-                # 申请连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
-                test-on-borrow: true
-                # 归还连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
-                test-on-return: true
-                # 是否缓存preparedStatement
+                test-while-idle: true
+                test-on-borrow: false
+                test-on-return: false
+
+                # 链接保活
+                keep-alive: true
+
+                # 缓存preparedStatement
                 pool-prepared-statements: true
-                # 当值大于0时poolPreparedStatements会自动修改为true
                 max-pool-prepared-statement-per-connection-size: 100
-                # 配置扩展插件
-                filters: stat,wall,log4j2
-                # 合并多个DruidDataSource的监控数据
-                use-global-data-source-stat: false
+
                 # 断链重连
                 break-after-acquire-failure: true
-                # 断链尝试次数
                 connection-error-retry-attempts: 1
-                # 连接池泄漏检测，当程序存在缺陷时，申请的链接忘记关闭。开启后对性能有影响
+
+                # 连接池泄漏检测。开启后对性能有影响
                 remove-abandoned: true
-                # 回收时限
                 remove-abandoned-timeout-millis: 300000
-                # 回首时打印日志
                 log-abandoned: true
+
+                # 监控
+                filters: stat,wall,log4j2
             datasource:
                 master:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
