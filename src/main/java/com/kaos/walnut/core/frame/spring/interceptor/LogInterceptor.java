@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: LogInterceptor.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  在过滤器中自动记录请求日志
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.spring.interceptor;
 
 import java.io.IOException;
@@ -8,7 +19,7 @@ import java.lang.reflect.Type;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.kaos.walnut.core.api.data.entity.KaosUser;
+import com.kaos.walnut.core.frame.entity.User;
 import com.kaos.walnut.core.type.annotations.ApiName;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
@@ -43,9 +54,9 @@ class LogInterceptor implements HandlerInterceptor {
         logBuilder.set(new StringBuilder());
 
         // 用户信息
-        KaosUser currentUser = KaosUser.getCurrentUser();
+        User currentUser = User.currentUser();
         if (currentUser != null) {
-            logBuilder.get().append(String.format(" [%s]", KaosUser.getCurrentUser().getUserName()));
+            logBuilder.get().append(String.format(" [%s]", currentUser.getName()));
         }
 
         // 对注解了ApiName的方法改名

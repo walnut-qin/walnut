@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: FormatterConfigurer.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  登记 HTTP 请求的 URI 参数转换器
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.spring.formatter;
 
 import org.springframework.context.annotation.Configuration;

@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: HttpMessageConverterConfigurer.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  登记 HTTP 接口的消息类型转换器
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.spring.converter;
 
 import java.util.List;

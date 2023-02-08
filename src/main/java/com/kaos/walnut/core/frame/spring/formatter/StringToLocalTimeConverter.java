@@ -1,4 +1,15 @@
-package com.kaos.walnut.core.frame.spring.formatter;
+/*********************************************************
+ * File: StringToDateConverter.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  实现字符串到 LocalTime 的转换
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
+ package com.kaos.walnut.core.frame.spring.formatter;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

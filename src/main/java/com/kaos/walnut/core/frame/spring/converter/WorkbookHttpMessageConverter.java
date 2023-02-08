@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: WorkbookHttpMessageConverter.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  实现 WorkBook 类的消息转换，处理 Excel 导出
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.spring.converter;
 
 import java.io.IOException;

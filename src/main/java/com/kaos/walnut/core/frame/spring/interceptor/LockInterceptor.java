@@ -1,4 +1,15 @@
-package com.kaos.walnut.core.frame.spring.interceptor;
+/*********************************************************
+ * File: LockInterceptor.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  在过滤器阶段完成锁功能初始化
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
+ package com.kaos.walnut.core.frame.spring.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
