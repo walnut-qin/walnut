@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan({ "com.kaos.walnut.api.data.*.mapper" })
+@MapperScan({ "com.kaos.walnut.api.**.mapper" })
 public class WalnutApplication {
 
 	public static void main(String[] args) {
