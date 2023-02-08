@@ -65,6 +65,12 @@ spring:
                 break-after-acquire-failure: true
                 # 断链尝试次数
                 connection-error-retry-attempts: 1
+                # 连接池泄漏检测，当程序存在缺陷时，申请的链接忘记关闭。开启后对性能有影响
+                remove-abandoned: true
+                # 回收时限
+                remove-abandoned-timeout-millis: 300000
+                # 回首时打印日志
+                log-abandoned: true
             datasource:
                 master:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
