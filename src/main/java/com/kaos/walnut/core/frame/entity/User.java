@@ -11,9 +11,11 @@
 
 package com.kaos.walnut.core.frame.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class User {
     /**
      * 用户的全局唯一标识
