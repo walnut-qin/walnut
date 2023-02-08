@@ -28,7 +28,7 @@ spring:
                 url-pattern: /api/*
                 exclusions: .gif,.html
         dynamic:
-            primary: his
+            primary: master
             strict: false
             druid:
                 # 初始化时建立链接数量
@@ -66,7 +66,7 @@ spring:
                 # 断链尝试次数
                 connection-error-retry-attempts: 1
             datasource:
-                his:
+                master:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
                     username: xyhis
                     password: zhmz13886256909
