@@ -125,7 +125,7 @@ public class TokenService {
         if (!matcher.find()) {
             throw new RuntimeException("token中未发现用户编码");
         }
-        String uid = matcher.group(0);
+        String uid = matcher.group(1);
 
         // 定位用户实体
         var user = kaosUserMapper.selectById(uid);
