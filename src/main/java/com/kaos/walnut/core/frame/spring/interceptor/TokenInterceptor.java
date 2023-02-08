@@ -99,7 +99,7 @@ class TokenInterceptor implements HandlerInterceptor {
          */
         public User checkToken(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
             // 获取token
-            String token = request.getHeader("Token");
+            String token = request.getHeader("W-Token");
             if (token == null) {
                 log.error("token校验失败: token为空");
                 throw new RuntimeException("无token, 请登录");
