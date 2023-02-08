@@ -68,8 +68,8 @@ spring:
             datasource:
                 master:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
-                    username: xyhis
-                    password: zhmz13886256909
+                    username: KAOS
+                    password: KAOS
 mybatis-plus:
     configuration:
         default-enum-type-handler: com.kaos.walnut.core.frame.mybatis.EnumTypeHandler
