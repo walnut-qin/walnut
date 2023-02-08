@@ -61,6 +61,10 @@ spring:
                 filters: stat,wall,log4j2
                 # 合并多个DruidDataSource的监控数据
                 use-global-data-source-stat: false
+                # 断链重连
+                break-after-acquire-failure: true
+                # 断链尝试次数
+                connection-error-retry-attempts: 1
             datasource:
                 his:
                     url: jdbc:oracle:thin:@//192.168.10.89:1521/his
