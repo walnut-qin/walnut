@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: ResponseAdvice.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  在写body前实现springboot响应封装功能
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.spring.advice;
 
 import com.kaos.walnut.core.util.StringUtils;
@@ -22,17 +33,17 @@ class ResponseAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
             Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
             ServerHttpResponse response) {
-        // 仅包装application/json的类型
+        // 跳出非 application/json 的响应
         if (!StringUtils.equals(selectedContentType.getSubtype(), "json")) {
             return body;
         }
 
-        // 异常处理，不包装
+        // 跳出前向异常处理过的响应
         if (body instanceof Wrapper) {
             return body;
         }
 
-        // 特殊响应不处理，例如404
+        // 跳出404error的响应
         if (request instanceof ServletServerHttpRequest) {
             var req = (ServletServerHttpRequest) request;
             if (StringUtils.equals(req.getServletRequest().getRequestURI(), "/error")) {
