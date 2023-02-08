@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: ExceptionAdvice.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  实现springboot框架对各种异常的切片处理
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.spring.advice;
 
 import java.util.List;
@@ -16,6 +27,12 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @ControllerAdvice
 class ExceptionAdvice {
+    /**
+     * 通常异常处理
+     * 
+     * @param ex
+     * @return
+     */
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Wrapper exceptionHandler(Exception ex) {
@@ -23,6 +40,12 @@ class ExceptionAdvice {
         return new Wrapper(-1, ex.getMessage(), null);
     }
 
+    /**
+     * 函数参数校验失败异常处理
+     * 
+     * @param ex
+     * @return
+     */
     @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Wrapper exceptionHandler(MethodArgumentNotValidException ex) {
@@ -33,6 +56,12 @@ class ExceptionAdvice {
         return new Wrapper(-1, errMsg, null);
     }
 
+    /**
+     * class注解的校验异常处理
+     * 
+     * @param ex
+     * @return
+     */
     @ResponseBody
     @ExceptionHandler(value = ConstraintViolationException.class)
     public Wrapper exceptionHandler(ConstraintViolationException ex) {
