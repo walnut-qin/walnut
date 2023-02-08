@@ -43,8 +43,10 @@ spring:
                 test-while-idle: true
                 # 既作为检测的间隔时间又作为test-While-Idel执行的依据
                 time-between-eviction-runs-millis: 2000
+                # 保持链接活性
+                keep-alive: true
                 # 销毁线程时检测当前连接的最后活动时间和当前时间差大于该值时，关闭当前连接
-                min-evictable-idle-time-millis: 30000
+                min-evictable-idle-time-millis: 200000
                 # 用来检测连接是否有效的sql 必须是一个查询语句
                 validation-query: select 1 from dual
                 # 申请连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
