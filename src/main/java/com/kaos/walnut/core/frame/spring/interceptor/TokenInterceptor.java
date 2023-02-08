@@ -88,7 +88,7 @@ class TokenInterceptor implements HandlerInterceptor {
         /**
          * 处理器
          */
-        private RestTemplateWrapper restTemplateWrapper = new RestTemplateWrapper("host", 8080);
+        private RestTemplateWrapper restTemplateWrapper = new RestTemplateWrapper("walnut.authenticate.net", 8080);
 
         /**
          * 校验token
@@ -110,7 +110,7 @@ class TokenInterceptor implements HandlerInterceptor {
             reqBodyBuilder.token(token);
 
             // 发送校验请求
-            var rspBody = restTemplateWrapper.post("/api/authenticate", reqBodyBuilder.build(), RspBody.class);
+            var rspBody = restTemplateWrapper.post("/api/token/check", reqBodyBuilder.build(), RspBody.class);
             if (rspBody.getCode() == 0) {
                 response.setHeader("Access-Control-Expose-Headers", "Token");
                 response.setHeader("Token", rspBody.getData().getToken());
