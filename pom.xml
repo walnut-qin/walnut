@@ -8,7 +8,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.kaos</groupId>
-	<artifactId>walnut-core</artifactId>
+	<artifactId>walnut</artifactId>
 	<version>1.0.0</version>
 	<name>walnut</name>
 	<description>walnut system</description>
