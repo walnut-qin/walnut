@@ -111,7 +111,7 @@ class TokenInterceptor implements HandlerInterceptor {
 
             // 发送校验请求
             var rspBody = restTemplateWrapper.post("/api/token/check", reqBodyBuilder.build(), RspBody.class);
-            if (rspBody.getCode() == 0) {
+            if (rspBody.getCode() == 0 && rspBody.getData().getToken() != null) {
                 response.setHeader("Access-Control-Expose-Headers", "Token");
                 response.setHeader("Token", rspBody.getData().getToken());
             } else {
