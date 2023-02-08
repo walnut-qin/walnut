@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: PageInterceptorConfig.java
+ * Created Date: 2022-07-25
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  分页查询插件
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.core.frame.mybatis;
 
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
