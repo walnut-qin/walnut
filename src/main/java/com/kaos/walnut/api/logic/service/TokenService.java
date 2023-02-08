@@ -149,7 +149,12 @@ public class TokenService {
         String newToken = null;
 
         // token解码
-        DecodedJWT decodedJWT = JWT.decode(token);
+        DecodedJWT decodedJWT = null;
+        try {
+            decodedJWT = JWT.decode(token);
+        } catch (Exception e) {
+            throw new RuntimeException("token格式异常");
+        }
 
         // 获取系统用户
         var uid = decodedJWT.getAudience().get(0);
