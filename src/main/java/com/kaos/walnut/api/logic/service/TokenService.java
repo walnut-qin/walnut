@@ -127,13 +127,7 @@ public class TokenService {
         }
         String uid = matcher.group(1);
 
-        // 定位用户实体
-        var user = kaosUserMapper.selectById(uid);
-        if (user == null) {
-            throw new RuntimeException("用户不存在");
-        }
-
-        return new Pair<User, String>(new User(user.getUserCode(), user.getUserName()), null);
+        return new Pair<User, String>(new User(uid, uid), null);
     }
 
     /**
