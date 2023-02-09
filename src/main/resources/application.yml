@@ -64,7 +64,7 @@ spring:
                 connection-error-retry-attempts: 1
 
                 # 连接池泄漏检测。开启后对性能有影响
-                remove-abandoned: true
+                remove-abandoned: false
                 remove-abandoned-timeout-millis: 300000
                 log-abandoned: true
 
