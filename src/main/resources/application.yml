@@ -1,6 +1,6 @@
 # web服务
 server:
-    port: 80
+    port: 8082
 
 # log4j2
 logging:
