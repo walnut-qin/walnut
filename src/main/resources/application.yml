@@ -42,9 +42,9 @@ spring:
                 # 检测时间间隔
                 time-between-eviction-runs-millis: 2000
 
-                # 销毁线程时检测当前连接的最后活动时间和当前时间差大于该值时，关闭当前连接
-                min-evictable-idle-time-millis: 600000
-                max-evictable-idle-time-millis: 900000
+                # 8min < 链接生存期 < 10min (数据库一般会主动关闭10分钟无活动的链接)
+                min-evictable-idle-time-millis: 480000
+                max-evictable-idle-time-millis: 600000
 
                 # 检测手段
                 validation-query: select 1 from dual
