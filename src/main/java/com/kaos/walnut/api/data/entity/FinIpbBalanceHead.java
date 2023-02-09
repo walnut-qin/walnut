@@ -1,3 +1,14 @@
+/*********************************************************
+ * File: FinIpbBalanceHead.java
+ * Created Date: 2023-02-09
+ * Author: walnut(覃鹏展)
+ * 
+ * Description:
+ *  结算头表数据
+ * 
+ * Copyright (C) 2023 襄阳市中心医院
+ *********************************************************/
+
 package com.kaos.walnut.api.data.entity;
 
 import java.time.LocalDateTime;
@@ -5,6 +16,8 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.kaos.walnut.api.data.enums.DeptOwnEnum;
+import com.kaos.walnut.api.data.enums.TransTypeEnum;
 import com.kaos.walnut.core.type.Enum;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
