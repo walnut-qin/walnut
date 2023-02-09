@@ -17,10 +17,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.kaos.walnut.api.data.entity.FinIpbBalanceHead;
 import com.kaos.walnut.api.data.mapper.FinIpbBalanceHeadMapper;
 import com.kaos.walnut.core.type.Enum;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
+import com.kaos.walnut.core.util.DoubleUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -42,10 +45,33 @@ public class ReportController {
     @Autowired
     FinIpbBalanceHeadMapper finIpbBalanceHeadMapper;
 
+    /**
+     * 计算新医保的日结数据
+     * 
+     * @param reqBody
+     * @return
+     */
     @ApiName("查询新医保日结")
     @RequestMapping(value = "queryNewYbCost", method = RequestMethod.POST, produces = MediaType.JSON)
     Double queryNewYbCost(@RequestBody @Valid QueryNewYbCost.ReqBody reqBody) {
-        return 0.0;
+        // 检索相关结算数据
+        var queryWrapper = new QueryWrapper<FinIpbBalanceHead>().lambda();
+        queryWrapper.eq(FinIpbBalanceHead::getBalanceOperCode, reqBody.balancer);
+        queryWrapper.between(FinIpbBalanceHead::getBalanceDate, reqBody.beginDate, reqBody.endDate);
+        queryWrapper.eq(FinIpbBalanceHead::getPactCode, 18);
+        queryWrapper.eq(FinIpbBalanceHead::getDaybalanceFlag, 0);
+        var balanceHeads = this.finIpbBalanceHeadMapper.selectList(queryWrapper);
+
+        // 算和
+        var sum = balanceHeads.stream().mapToDouble(x -> {
+            var reg = switch (reqBody.type) {
+                case PUB -> x.getPubCost();
+                case PAY -> x.getPayCost();
+            };
+            return DoubleUtils.eraseNull(reg);
+        }).sum();
+
+        return sum;
     }
 
     static class QueryNewYbCost {
