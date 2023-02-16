@@ -27,4 +27,10 @@ public class DawnOrgEmpl {
      */
     @TableField("VALID_STATE")
     ValidStateEnum validState;
+
+    /**
+     * 归属科室
+     */
+    @TableField("DEPT_ID")
+    String deptCode;
 }
