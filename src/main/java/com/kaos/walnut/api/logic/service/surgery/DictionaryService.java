@@ -15,6 +15,8 @@ import com.kaos.walnut.api.data.enums.ValidStateEnum;
 import com.kaos.walnut.api.data.mapper.DawnOrgDeptMapper;
 import com.kaos.walnut.api.data.mapper.DawnOrgEmplMapper;
 import com.kaos.walnut.api.data.mapper.MetComIcdOperationMapper;
+import com.kaos.walnut.core.type.exceptions.LogException;
+import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
 
 import org.apache.commons.math3.util.Pair;
@@ -25,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -67,103 +68,88 @@ public class DictionaryService {
      * @return
      */
     private Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkSheet(Sheet sheet) {
-        // 构造响应
-        Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> result = Maps.newHashMap();
-        Boolean passed = true;
-
-        // 校验表头
+        // 校验excel模板
         if (!sheet.getRow(2).getCell(1).getStringCellValue().equals("授权科室")
                 || !sheet.getRow(3).getCell(1).getStringCellValue().equals("手术编码")
                 || !sheet.getRow(3).getCell(2).getStringCellValue().equals("手术名称")) {
             throw new RuntimeException("文件模板校验失败");
         }
 
-        // 校验科室信息
+        // 校验表头 - 科室信息
         var deptName = sheet.getRow(2).getCell(2).getStringCellValue().trim();
+        if (StringUtils.isBlank(deptName)) {
+            throw new RuntimeException("excel表中未指定科室");
+        }
+
+        // 检索科室实体
         var queryWrapper = new QueryWrapper<DawnOrgDept>().lambda();
         queryWrapper.eq(DawnOrgDept::getDeptName, deptName);
         queryWrapper.eq(DawnOrgDept::getValidState, ValidStateEnum.在用);
         var depts = this.deptMapper.selectList(queryWrapper);
-        if (depts.size() == 0) {
-            throw new RuntimeException(String.format("科室<%s>校验失败: 科室不存在或已停用", deptName));
+        if (depts.isEmpty()) {
+            throw new RuntimeException(String.format("科室<%s>校验失败: 不存在或已停用", deptName));
         } else if (depts.size() > 1) {
             throw new RuntimeException(String.format("科室<%s>校验失败: 存在同名科室", deptName));
         }
 
-        // 行校验
-        for (var row : sheet) {
-            // 跳过表头
-            switch (row.getRowNum()) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    continue;
+        // 校验body
+        try {
+            return this.checkBody(depts.get(0), sheet);
+        } catch (LogException e) {
+            log.error(ObjectUtils.serialize(e.getLogInfo()));
+            throw new RuntimeException(String.format("科室<%s>授权信息校验失败: 明细请查看服务器日志", deptName));
+        }
+    }
 
-                default:
-                    break;
-            }
+    /**
+     * 校验sheet的body
+     * 
+     * @param dept
+     * @param sheet
+     * @return
+     * @throws LogException
+     */
+    private Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkBody(DawnOrgDept dept, Sheet sheet)
+            throws LogException {
+        // 声明异常集
+        Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> result = Maps.newHashMap();
+        Queue<Object> errors = Queues.newArrayDeque();
 
-            // 读取ICD编码和ICD名称
-            var icd = row.getCell(1).getStringCellValue();
-            if (StringUtils.isBlank(icd)) {
+        // 轮训所有数据行
+        for (int i = 4; i < sheet.getLastRowNum(); i++) {
+            // 锚定行对象
+            var row = sheet.getRow(i);
+
+            // 跳过空行
+            var icdCode = row.getCell(1).getStringCellValue().trim();
+            if (StringUtils.isBlank(icdCode)) {
                 continue;
             }
-            var icdName = row.getCell(2).getStringCellValue();
-            // 检索ICD手术实体
-            var surgery = this.icdMapper.selectById(icd);
-            // 校验ICD手术实体有效性
-            if (surgery == null) {
-                passed = false;
-                log.error(String.format("手术<%s, %s>校验失败: 手术未维护", icd, icdName));
-                continue;
-            } else if (surgery.getValidState() != ValidStateEnum.在用) {
-                passed = false;
-                log.error(String.format("手术<%s, %s>校验失败: 手术已作废", icd, icdName));
+
+            // 检索符合条件的手术记录
+            var icd = this.icdMapper.selectById(icdCode);
+            if (icd == null || icd.getValidState() != ValidStateEnum.在用) {
+                errors.add(String.format("手术<%s, %s>校验失败: 手术未维护", icd.getIcdCode(), icd.getIcdName()));
                 continue;
             }
 
-            // 医师校验
-            Queue<DawnOrgEmpl> docCodes = Queues.newArrayDeque();
-            for (Integer i = 3; i < row.getLastCellNum(); i++) {
-                // 读取医生姓名
-                var docName = row.getCell(i).getStringCellValue().trim();
-                if (StringUtils.isBlank(docName)) {
-                    continue;
-                }
-
-                // 检索医生实体
-                var wrapper = new QueryWrapper<DawnOrgEmpl>().lambda();
-                wrapper.eq(DawnOrgEmpl::getValidState, ValidStateEnum.在用);
-                wrapper.eq(DawnOrgEmpl::getEmplName, docName);
-                wrapper.eq(DawnOrgEmpl::getDeptCode, depts.get(0).getDeptCode());
-                var doctors = this.emplMapper.selectList(wrapper);
-
-                // 检验医生实体有效性
-                if (doctors.size() == 0) {
-                    passed = false;
-                    log.error(String.format("医师<%s>校验失败: 医师不属于科室<%s>或医师不存在或已停用", deptName, docName));
-                    continue;
-                } else if (doctors.size() > 1) {
-                    passed = false;
-                    log.error(String.format("医师<%s>校验失败: 存在同名医师", docName));
-                    continue;
-                }
-
-                // 将医师实体加入结果集
-                docCodes.add(doctors.get(0));
+            // 校验医师
+            try {
+                var doctors = this.checkDoctors(dept, icd, row);
+                result.put(icd.getIcdCode(), new Pair<DawnOrgDept, Queue<DawnOrgEmpl>>(dept, doctors));
+            } catch (LogException e) {
+                var node = Maps.newHashMap();
+                node.put(icd.getIcdCode(), e.getLogInfo());
+                errors.add(node);
             }
-
-            // 加入结果集
-            result.put(surgery.getIcdCode(), new Pair<>(depts.get(0), docCodes));
         }
 
-        // 最终判定
-        if (!passed) {
-            throw new RuntimeException("数据行校验失败, 详细异常请查看服务器日志");
+        // 判断响应
+        if (errors.isEmpty()) {
+            return result;
+        } else {
+            throw new LogException(errors);
         }
-
-        return result;
     }
 
     /**
@@ -175,7 +161,7 @@ public class DictionaryService {
     private Queue<DawnOrgEmpl> checkDoctors(DawnOrgDept dept, MetComIcdOperation icd, Row row) throws LogException {
         // 声明 结果集 和 异常集
         Queue<DawnOrgEmpl> doctors = Queues.newArrayDeque();
-        Queue<String> errors = Queues.newArrayDeque();
+        Queue<Object> errors = Queues.newArrayDeque();
 
         // 轮训所有的单元格
         for (Integer i = 3; i < row.getLastCellNum(); i++) {
@@ -205,26 +191,6 @@ public class DictionaryService {
             return doctors;
         } else {
             throw new LogException(errors);
-        }
-    }
-
-    /**
-     * 用于记录日志的异常
-     */
-    static class LogException extends RuntimeException {
-        /**
-         * 异常信息
-         */
-        @Getter
-        public Object errInfo;
-
-        /**
-         * 构造函数
-         * 
-         * @param errInfo
-         */
-        public LogException(Object errInfo) {
-            this.errInfo = errInfo;
         }
     }
 }
