@@ -63,9 +63,9 @@ public class DictionaryService {
      * @param sheet
      * @return
      */
-    private Map<String, Pair<String, Queue<String>>> checkSheet(Sheet sheet) {
+    private Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkSheet(Sheet sheet) {
         // 构造响应
-        Map<String, Pair<String, Queue<String>>> result = Maps.newHashMap();
+        Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> result = Maps.newHashMap();
         Boolean passed = true;
 
         // 校验表头
@@ -89,7 +89,7 @@ public class DictionaryService {
 
         // 行校验
         for (var row : sheet) {
-            // 跳过header
+            // 跳过表头
             switch (row.getRowNum()) {
                 case 0:
                 case 1:
@@ -101,13 +101,15 @@ public class DictionaryService {
                     break;
             }
 
-            // 手术校验
+            // 读取ICD编码和ICD名称
             var icd = row.getCell(1).getStringCellValue();
             if (StringUtils.isBlank(icd)) {
                 continue;
             }
             var icdName = row.getCell(2).getStringCellValue();
+            // 检索ICD手术实体
             var surgery = this.icdMapper.selectById(icd);
+            // 校验ICD手术实体有效性
             if (surgery == null) {
                 passed = false;
                 log.error(String.format("手术<%s, %s>校验失败: 手术未维护", icd, icdName));
@@ -119,18 +121,22 @@ public class DictionaryService {
             }
 
             // 医师校验
-            Queue<String> docCodes = Queues.newArrayDeque();
+            Queue<DawnOrgEmpl> docCodes = Queues.newArrayDeque();
             for (Integer i = 3; i < row.getLastCellNum(); i++) {
-                // 校验
+                // 读取医生姓名
                 var docName = row.getCell(i).getStringCellValue().trim();
                 if (StringUtils.isBlank(docName)) {
                     continue;
                 }
+
+                // 检索医生实体
                 var wrapper = new QueryWrapper<DawnOrgEmpl>().lambda();
                 wrapper.eq(DawnOrgEmpl::getValidState, ValidStateEnum.在用);
                 wrapper.eq(DawnOrgEmpl::getEmplName, docName);
                 wrapper.eq(DawnOrgEmpl::getDeptCode, depts.get(0).getDeptCode());
                 var doctors = this.emplMapper.selectList(wrapper);
+
+                // 检验医生实体有效性
                 if (doctors.size() == 0) {
                     passed = false;
                     log.error(String.format("医师<%s>校验失败: 医师不属于科室<%s>或医师不存在或已停用", deptName, docName));
@@ -140,12 +146,13 @@ public class DictionaryService {
                     log.error(String.format("医师<%s>校验失败: 存在同名医师", docName));
                     continue;
                 }
-                // 加入结果集
-                docCodes.add(doctors.get(0).getEmplCode());
+
+                // 将医师实体加入结果集
+                docCodes.add(doctors.get(0));
             }
 
             // 加入结果集
-            result.put(surgery.getIcdCode(), new Pair<String, Queue<String>>(depts.get(0).getDeptCode(), docCodes));
+            result.put(surgery.getIcdCode(), new Pair<>(depts.get(0), docCodes));
         }
 
         // 最终判定
