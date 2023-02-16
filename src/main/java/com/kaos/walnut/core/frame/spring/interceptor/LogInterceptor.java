@@ -24,6 +24,7 @@ import com.kaos.walnut.core.type.annotations.ApiName;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -119,7 +120,11 @@ class LogInterceptor implements HandlerInterceptor {
         public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
                 Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
             // 加入body
-            logBuilder.get().append(String.format(" body = %s", ObjectUtils.serialize(body)));
+            if (body instanceof Workbook) {
+                logBuilder.get().append(String.format(" body = %s", "workbook"));
+            } else {
+                logBuilder.get().append(String.format(" body = %s", ObjectUtils.serialize(body)));
+            }
 
             // 写日志
             log.info(logBuilder.get().toString());
