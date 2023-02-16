@@ -72,7 +72,7 @@ public class DictionaryService {
         }
 
         // 校验科室信息
-        var deptName = sheet.getSheetName();
+        var deptName = sheet.getSheetName().trim();
         var queryWrapper = new QueryWrapper<DawnOrgDept>().lambda();
         queryWrapper.eq(DawnOrgDept::getDeptName, deptName);
         queryWrapper.eq(DawnOrgDept::getValidState, ValidStateEnum.在用);
@@ -84,8 +84,6 @@ public class DictionaryService {
         }
 
         // 行校验
-        var wrapper = new QueryWrapper<DawnOrgEmpl>().lambda();
-        wrapper.eq(DawnOrgEmpl::getValidState, ValidStateEnum.在用);
         for (var row : sheet) {
             // 跳过header
             if (row.getRowNum() == 0) {
@@ -94,18 +92,21 @@ public class DictionaryService {
 
             // 手术校验
             var icd = row.getCell(0).getStringCellValue();
+            var icdName = row.getCell(1).getStringCellValue();
             var surgery = this.icdMapper.selectById(icd);
             if (surgery == null) {
-                throw new RuntimeException("手术校验失败: 手术未维护");
+                throw new RuntimeException(String.format("手术<%s, %s>校验失败: 手术未维护", icd, icdName));
             } else if (surgery.getValidState() != ValidStateEnum.在用) {
-                throw new RuntimeException("手术校验失败: 手术已作废");
+                throw new RuntimeException(String.format("手术<%s, %s>校验失败: 手术已作废", icd, icdName));
             }
 
             // 医师校验
             Queue<String> docCodes = Queues.newArrayDeque();
             for (Integer i = 4; i < row.getLastCellNum(); i++) {
                 // 校验
-                var docName = row.getCell(i).getStringCellValue();
+                var docName = row.getCell(i).getStringCellValue().trim();
+                var wrapper = new QueryWrapper<DawnOrgEmpl>().lambda();
+                wrapper.eq(DawnOrgEmpl::getValidState, ValidStateEnum.在用);
                 wrapper.eq(DawnOrgEmpl::getEmplName, docName);
                 var doctors = this.emplMapper.selectList(wrapper);
                 if (doctors.size() == 0) {
