@@ -12,5 +12,5 @@ public class LogException extends java.lang.Exception {
     /**
      * 日志信息
      */
-    Object objMsg;
+    Object logInfo;
 }
