@@ -51,6 +51,9 @@ class GsonWrapper {
         builder.registerTypeAdapter(Period.class, new Adapter.PeriodTypeAdapter());
         builder.registerTypeHierarchyAdapter(Cache.class, new Adapter.CacheTypeAdapter<>());
 
+        // 逃逸html转义符
+        builder.disableHtmlEscaping();
+
         // 构造gson对象
         gson = builder.create();
     }
