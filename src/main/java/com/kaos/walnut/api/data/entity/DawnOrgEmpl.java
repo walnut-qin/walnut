@@ -23,7 +23,7 @@ public class DawnOrgEmpl {
     String emplName;
 
     /**
-     * 手术名
+     * 有效性
      */
     @TableField("VALID_STATE")
     ValidStateEnum validState;

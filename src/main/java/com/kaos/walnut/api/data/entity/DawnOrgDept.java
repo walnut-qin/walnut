@@ -17,13 +17,13 @@ public class DawnOrgDept {
     String deptCode;
 
     /**
-     * 手术名
+     * 科室名
      */
     @TableField("DEPT_NAME")
     String deptName;
 
     /**
-     * 手术名
+     * 有效性
      */
     @TableField("VALID_STATE")
     ValidStateEnum validState;

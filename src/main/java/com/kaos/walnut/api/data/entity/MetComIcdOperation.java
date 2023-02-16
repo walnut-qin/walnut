@@ -3,6 +3,7 @@ package com.kaos.walnut.api.data.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.kaos.walnut.api.data.enums.ValidStateEnum;
 
 import lombok.Data;
 
@@ -20,6 +21,12 @@ public class MetComIcdOperation {
      */
     @TableField("ICD_NAME")
     String icdName;
+
+    /**
+     * 有效性
+     */
+    @TableField("VALID_STATE")
+    ValidStateEnum validState;
 
     /**
      * 科室编码
