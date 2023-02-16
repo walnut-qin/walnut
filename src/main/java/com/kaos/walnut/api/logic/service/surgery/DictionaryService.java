@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.kaos.walnut.api.data.entity.DawnOrgDept;
 import com.kaos.walnut.api.data.entity.DawnOrgEmpl;
+import com.kaos.walnut.api.data.entity.MetComIcdOperation;
 import com.kaos.walnut.api.data.enums.ValidStateEnum;
 import com.kaos.walnut.api.data.mapper.DawnOrgDeptMapper;
 import com.kaos.walnut.api.data.mapper.DawnOrgEmplMapper;
@@ -17,12 +18,14 @@ import com.kaos.walnut.api.data.mapper.MetComIcdOperationMapper;
 import com.kaos.walnut.core.util.StringUtils;
 
 import org.apache.commons.math3.util.Pair;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -161,5 +164,67 @@ public class DictionaryService {
         }
 
         return result;
+    }
+
+    /**
+     * 校验医师信息的有效性
+     * 
+     * @param row excel行对象
+     * @return
+     */
+    private Queue<DawnOrgEmpl> checkDoctors(DawnOrgDept dept, MetComIcdOperation icd, Row row) throws LogException {
+        // 声明 结果集 和 异常集
+        Queue<DawnOrgEmpl> doctors = Queues.newArrayDeque();
+        Queue<String> errors = Queues.newArrayDeque();
+
+        // 轮训所有的单元格
+        for (Integer i = 3; i < row.getLastCellNum(); i++) {
+            // 跳过空行
+            var name = row.getCell(i).getStringCellValue().trim();
+            if (StringUtils.isBlank(name)) {
+                continue;
+            }
+
+            // 检索符合条件的医师
+            var wrapper = new QueryWrapper<DawnOrgEmpl>().lambda();
+            wrapper.eq(DawnOrgEmpl::getValidState, ValidStateEnum.在用);
+            wrapper.eq(DawnOrgEmpl::getEmplName, name);
+            wrapper.eq(DawnOrgEmpl::getDeptCode, dept.getDeptCode());
+            var rets = this.emplMapper.selectList(wrapper);
+            if (rets.isEmpty()) {
+                errors.add(String.format("[%s]校验失败: 不存在满足条件的账号", name));
+            } else if (rets.size() > 1) {
+                errors.add(String.format("[%s]校验失败: 存在同名账号", name));
+            } else {
+                doctors.add(rets.get(0));
+            }
+        }
+
+        // 判断响应
+        if (errors.isEmpty()) {
+            return doctors;
+        } else {
+            throw new LogException(errors);
+        }
+    }
+
+    /**
+     * 用于记录日志的异常
+     */
+    static class LogException extends RuntimeException {
+        /**
+         * 异常信息
+         */
+        @Getter
+        public Object errInfo;
+
+        /**
+         * 构造函数
+         * 
+         * @param errInfo
+         */
+        public LogException(Object errInfo) {
+            this.errInfo = errInfo;
+        }
     }
 }
