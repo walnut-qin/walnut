@@ -129,7 +129,7 @@ public class DictionaryService {
             // 检索符合条件的手术记录
             var icd = this.icdMapper.selectById(icdCode);
             if (icd == null || icd.getValidState() != ValidStateEnum.在用) {
-                errors.add(String.format("手术<%s, %s>校验失败: 手术未维护", icd.getIcdCode(), icd.getIcdName()));
+                errors.add(String.format("手术<%s>校验失败: 手术未维护", icdCode));
                 continue;
             }
 
