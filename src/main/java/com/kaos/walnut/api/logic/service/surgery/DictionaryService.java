@@ -1,14 +1,13 @@
 package com.kaos.walnut.api.logic.service.surgery;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
 import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.Lists;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.kaos.walnut.api.data.entity.DawnOrgDept;
@@ -21,7 +20,6 @@ import com.kaos.walnut.api.data.mapper.MetComIcdOperationMapper;
 import com.kaos.walnut.core.type.exceptions.LogException;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
-import com.kaos.walnut.core.util.collection.ListUtils;
 
 import org.apache.commons.math3.util.Pair;
 import org.apache.poi.ss.usermodel.Row;
@@ -213,8 +211,21 @@ public class DictionaryService {
 
             // 更新科室信息
             this.updateDept(icd, priv.getFirst());
+
+            // 更新医生信息
+            this.updateDoctors(icd, priv.getSecond());
+
+            // 更新数据库
+            var wrapper = new UpdateWrapper<MetComIcdOperation>().lambda();
+            wrapper.eq(MetComIcdOperation::getIcdCode, icd.getIcdCode());
+            wrapper.set(MetComIcdOperation::getDeptCode, icd.getDeptCode());
+            wrapper.set(MetComIcdOperation::getDeptName, icd.getDeptName());
+            wrapper.set(MetComIcdOperation::getDocCode, icd.getDocCode());
+            wrapper.set(MetComIcdOperation::getDocName, icd.getDocName());
+            this.icdMapper.update(null, wrapper);
         }
-        return 0;
+
+        return data.size();
     }
 
     /**
@@ -225,10 +236,43 @@ public class DictionaryService {
      */
     private void updateDept(MetComIcdOperation icd, DawnOrgDept dept) {
         // 读取记录中的编码字段
-        var data = Arrays.asList(icd.getDeptCode().split("|"));
-        if (!data.contains(dept.getDeptCode())) {
-            data.add(dept.getDeptCode());
-            icd.setDeptCode(ListUtils.);
+        var codes = Arrays.asList(icd.getDeptCode().split("|"));
+        if (!codes.contains(dept.getDeptCode())) {
+            codes.add(dept.getDeptCode());
+            icd.setDeptCode(StringUtils.join(codes, "|"));
+        }
+
+        // 读取记录中的名称字段
+        var names = Arrays.asList(icd.getDeptName().split("|"));
+        if (!names.contains(dept.getDeptName())) {
+            names.add(dept.getDeptName());
+            icd.setDeptCode(StringUtils.join(names, "|"));
+        }
+    }
+
+    /**
+     * 修改医生信息
+     * 
+     * @param icd
+     * @param dept
+     */
+    private void updateDoctors(MetComIcdOperation icd, Queue<DawnOrgEmpl> doctors) {
+        // 读取记录中的编码字段
+        var codes = Arrays.asList(icd.getDocCode().split("|"));
+        for (DawnOrgEmpl doctor : doctors) {
+            if (!codes.contains(doctor.getEmplCode())) {
+                codes.add(doctor.getEmplCode());
+                icd.setDocCode(StringUtils.join(codes, "|"));
+            }
+        }
+
+        // 读取记录中的编码字段
+        var names = Arrays.asList(icd.getDocName().split("|"));
+        for (DawnOrgEmpl doctor : doctors) {
+            if (!names.contains(doctor.getEmplName())) {
+                names.add(doctor.getEmplName());
+                icd.setDocCode(StringUtils.join(names, "|"));
+            }
         }
     }
 }
