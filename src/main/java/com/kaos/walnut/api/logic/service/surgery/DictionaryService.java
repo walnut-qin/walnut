@@ -1,11 +1,14 @@
 package com.kaos.walnut.api.logic.service.surgery;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
 import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.kaos.walnut.api.data.entity.DawnOrgDept;
@@ -18,6 +21,7 @@ import com.kaos.walnut.api.data.mapper.MetComIcdOperationMapper;
 import com.kaos.walnut.core.type.exceptions.LogException;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
+import com.kaos.walnut.core.util.collection.ListUtils;
 
 import org.apache.commons.math3.util.Pair;
 import org.apache.poi.ss.usermodel.Row;
@@ -27,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.var;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -58,7 +63,8 @@ public class DictionaryService {
         // 校验数据
         var data = this.checkSheet(sheet);
 
-        return data.size();
+        // 执行授权
+        return this.updatePrivilege(data);
     }
 
     /**
@@ -191,6 +197,38 @@ public class DictionaryService {
             return doctors;
         } else {
             throw new LogException(errors);
+        }
+    }
+
+    /**
+     * 执行授权
+     * 
+     * @param data
+     */
+    private Integer updatePrivilege(Map<MetComIcdOperation, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> data) {
+        // 轮训修改
+        for (var icd : data.keySet()) {
+            // 锚定新数据
+            var priv = data.get(icd);
+
+            // 更新科室信息
+            this.updateDept(icd, priv.getFirst());
+        }
+        return 0;
+    }
+
+    /**
+     * 修改科室信息
+     * 
+     * @param icd
+     * @param dept
+     */
+    private void updateDept(MetComIcdOperation icd, DawnOrgDept dept) {
+        // 读取记录中的编码字段
+        var data = Arrays.asList(icd.getDeptCode().split("|"));
+        if (!data.contains(dept.getDeptCode())) {
+            data.add(dept.getDeptCode());
+            icd.setDeptCode(ListUtils.);
         }
     }
 }
