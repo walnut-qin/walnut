@@ -1,6 +1,6 @@
 package com.kaos.walnut.api.logic.controller.surgery;
 
-import com.kaos.walnut.api.logic.service.surgery.DictionaryService;
+import com.kaos.walnut.api.logic.service.surgery.PrivilegeService;
 import com.kaos.walnut.core.tool.lock.Lock;
 import com.kaos.walnut.core.tool.lock.LockExecutor;
 import com.kaos.walnut.core.type.MediaType;
@@ -27,7 +27,7 @@ public class DictionaryController {
      * 字典操作业务
      */
     @Autowired
-    DictionaryService dictionaryService;
+    PrivilegeService privilegeService;
 
     /**
      * 批量导入权限
@@ -43,7 +43,7 @@ public class DictionaryController {
         LockExecutor.clear();
         LockExecutor.link(lock, 0);
         return LockExecutor.execute(() -> {
-            return this.dictionaryService.importSurgery(workbook);
+            return this.privilegeService.importSurgery(workbook);
         });
     }
 }

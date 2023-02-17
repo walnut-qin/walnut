@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.kaos.walnut.api.data.entity.DawnOrgDept;
@@ -34,7 +35,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
-public class DictionaryService {
+public class PrivilegeService {
     /**
      * 手术信息接口
      */
@@ -236,17 +237,23 @@ public class DictionaryService {
      */
     private void updateDept(MetComIcdOperation icd, DawnOrgDept dept) {
         // 读取记录中的编码字段
-        var codes = Arrays.asList(icd.getDeptCode().split("|"));
+        var codes = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDeptCode())) {
+            codes.addAll(Arrays.asList(icd.getDeptCode().split("\\|")));
+        }
         if (!codes.contains(dept.getDeptCode())) {
             codes.add(dept.getDeptCode());
             icd.setDeptCode(StringUtils.join(codes, "|"));
         }
 
         // 读取记录中的名称字段
-        var names = Arrays.asList(icd.getDeptName().split("|"));
+        var names = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDeptName())) {
+            names.addAll(Arrays.asList(icd.getDeptName().split("\\|")));
+        }
         if (!names.contains(dept.getDeptName())) {
             names.add(dept.getDeptName());
-            icd.setDeptCode(StringUtils.join(names, "|"));
+            icd.setDeptName(StringUtils.join(names, "|"));
         }
     }
 
@@ -257,21 +264,25 @@ public class DictionaryService {
      * @param dept
      */
     private void updateDoctors(MetComIcdOperation icd, Queue<DawnOrgEmpl> doctors) {
-        // 读取记录中的编码字段
-        var codes = Arrays.asList(icd.getDocCode().split("|"));
+        // 构造初始容器
+        var codes = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDocCode())) {
+            codes.addAll(Arrays.asList(icd.getDocCode().split("\\|")));
+        }
+        var names = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDocName())) {
+            names.addAll(Arrays.asList(icd.getDocName().split("\\|")));
+        }
+
+        // 轮训修改
         for (DawnOrgEmpl doctor : doctors) {
             if (!codes.contains(doctor.getEmplCode())) {
                 codes.add(doctor.getEmplCode());
                 icd.setDocCode(StringUtils.join(codes, "|"));
             }
-        }
-
-        // 读取记录中的编码字段
-        var names = Arrays.asList(icd.getDocName().split("|"));
-        for (DawnOrgEmpl doctor : doctors) {
             if (!names.contains(doctor.getEmplName())) {
                 names.add(doctor.getEmplName());
-                icd.setDocCode(StringUtils.join(names, "|"));
+                icd.setDocName(StringUtils.join(names, "|"));
             }
         }
     }
