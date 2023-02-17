@@ -67,7 +67,7 @@ public class DictionaryService {
      * @param sheet
      * @return
      */
-    private Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkSheet(Sheet sheet) {
+    private Map<MetComIcdOperation, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkSheet(Sheet sheet) {
         // 校验excel模板
         if (!sheet.getRow(2).getCell(1).getStringCellValue().equals("授权科室")
                 || !sheet.getRow(3).getCell(1).getStringCellValue().equals("手术编码")
@@ -109,10 +109,10 @@ public class DictionaryService {
      * @return
      * @throws LogException
      */
-    private Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkBody(DawnOrgDept dept, Sheet sheet)
+    private Map<MetComIcdOperation, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> checkBody(DawnOrgDept dept, Sheet sheet)
             throws LogException {
         // 声明异常集
-        Map<String, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> result = Maps.newHashMap();
+        Map<MetComIcdOperation, Pair<DawnOrgDept, Queue<DawnOrgEmpl>>> result = Maps.newHashMap();
         Queue<Object> errors = Queues.newArrayDeque();
 
         // 轮训所有数据行
@@ -136,7 +136,7 @@ public class DictionaryService {
             // 校验医师
             try {
                 var doctors = this.checkDoctors(dept, icd, row);
-                result.put(icd.getIcdCode(), new Pair<DawnOrgDept, Queue<DawnOrgEmpl>>(dept, doctors));
+                result.put(icd, new Pair<DawnOrgDept, Queue<DawnOrgEmpl>>(dept, doctors));
             } catch (LogException e) {
                 var node = Maps.newHashMap();
                 node.put(icd.getIcdCode(), e.getLogInfo());

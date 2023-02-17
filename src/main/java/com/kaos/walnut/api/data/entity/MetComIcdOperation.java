@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.kaos.walnut.api.data.enums.ValidStateEnum;
+import com.kaos.walnut.core.util.ObjectUtils;
+import com.kaos.walnut.core.util.StringUtils;
 
 import lombok.Data;
 
@@ -51,4 +53,18 @@ public class MetComIcdOperation {
      */
     @TableField("DOCT_NAME")
     String docName;
+
+    @Override
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof MetComIcdOperation) {
+            var that = (MetComIcdOperation) arg0;
+            return StringUtils.equals(this.icdCode, that.icdCode);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return ObjectUtils.hashCode(icdCode);
+    }
 }
