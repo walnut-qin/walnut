@@ -14,20 +14,20 @@ public class FinIpbDayReportDetail {
     /**
      * 日结序号
      */
-    @TableId("STAT_NO")
+    @TableId("STATIC_NO")
     String statNo;
 
     /**
      * 日结时间
      */
-    @TableId("STAT_NO")
+    @TableId("STAT_CODE")
     String statCode;
 
     /**
      * 日结时间
      */
     @TableField("TOT_COST")
-    String totCost;
+    Double totCost;
 
     @Override
     public boolean equals(Object arg0) {
