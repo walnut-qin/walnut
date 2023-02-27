@@ -1,3 +1,6 @@
+# 共有8个级别，按照从低到高为：ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+# intLevel值依次为0,100,200,300,400,500,600,700
+# intLevel值越小，级别越高
 Configuration:
     # 日志框架本身的级别
     status: warn
