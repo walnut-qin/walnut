@@ -121,6 +121,9 @@ public class PrivilegeService {
 
         // 轮训所有数据行
         for (int i = 4; i < sheet.getLastRowNum(); i++) {
+            // 记录debug日志
+            log.debug(String.format("读取excel表单第 %d 行", i));
+
             // 锚定行对象
             var row = sheet.getRow(i);
 
@@ -169,6 +172,9 @@ public class PrivilegeService {
 
         // 轮训所有的单元格
         for (Integer i = 3; i < row.getLastCellNum(); i++) {
+            // 记录debug日志
+            log.debug(String.format("读取excel表单第 %d 列", i));
+
             // 跳过空行
             var name = row.getCell(i).getStringCellValue().trim();
             if (StringUtils.isBlank(name)) {
