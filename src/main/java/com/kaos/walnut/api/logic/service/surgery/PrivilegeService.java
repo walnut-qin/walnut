@@ -128,7 +128,7 @@ public class PrivilegeService {
             var row = sheet.getRow(i);
 
             // 跳过空行
-            var icdCode = row.getCell(1).getStringCellValue().trim();
+            var icdCode = row.getCell(1).toString().trim();
             if (StringUtils.isBlank(icdCode)) {
                 continue;
             }
@@ -176,7 +176,7 @@ public class PrivilegeService {
             log.debug(String.format("读取excel表单第 %d 列", i));
 
             // 跳过空行
-            var name = row.getCell(i).getStringCellValue().trim();
+            var name = row.getCell(i).toString().trim();
             if (StringUtils.isBlank(name)) {
                 continue;
             }
