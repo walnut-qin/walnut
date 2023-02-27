@@ -121,4 +121,10 @@ public class ReportController {
             }
         }
     }
+
+    /**
+     * 检查近期数据的正确性
+     */
+    void checkData() {
+    }
 }
