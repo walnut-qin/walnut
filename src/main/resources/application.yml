@@ -1,6 +1,6 @@
 # web服务
 server:
-    port: 80
+    port: 8083
 
 # log4j2
 logging:
@@ -72,9 +72,9 @@ spring:
                 filters: stat,wall,log4j2
             datasource:
                 master:
-                    url: jdbc:oracle:thin:@//192.168.10.89:1521/his
-                    username: xyhis
-                    password: zhmz13886256909
+                    url: jdbc:oracle:thin:@//192.168.10.150/docare
+                    username: SYSTEM
+                    password: DOCARE
 mybatis-plus:
     configuration:
         default-enum-type-handler: com.kaos.walnut.core.frame.mybatis.EnumTypeHandler
