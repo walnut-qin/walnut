@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.kaos.walnut.api.data.entity.MedOperationMaster;
 import com.kaos.walnut.api.data.mapper.MedOperationMasterMapper;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +36,20 @@ public class EditorService {
         var sheet = data.getSheetAt(0);
 
         // 批量处理
-        for (int i = 1; i < sheet.getLastRowNum(); i++) {
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             // 锚定行
             var row = sheet.getRow(i);
 
             // 修改数据
             this.makeFakeRow(row);
+
+            // 达到指定行数后结束逻辑
+            if (i == 6832) {
+                break;
+            }
         }
 
-        return null;
+        return data;
     }
 
     /**
@@ -54,8 +60,8 @@ public class EditorService {
     private void makeFakeRow(Row row) {
         // 读取主键
         var patientId = row.getCell(0).toString();
-        var visitId = Integer.valueOf(row.getCell(1).toString());
-        var operId = Integer.valueOf(row.getCell(2).toString());
+        var visitId = Double.valueOf(row.getCell(1).toString()).intValue();
+        var operId = Double.valueOf(row.getCell(2).toString()).intValue();
 
         // 检索数据库数据
         var queryWrapper = new QueryWrapper<MedOperationMaster>().lambda();
@@ -71,7 +77,13 @@ public class EditorService {
 
         // 设置新的复苏时间
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        row.getCell(3).setCellValue(inDateTime.format(formatter));
-        row.getCell(4).setCellValue(outDateTime.format(formatter));
+        if (row.getCell(4) == null) {
+            row.createCell(4, CellType.STRING);
+        }
+        row.getCell(4).setCellValue(inDateTime.format(formatter));
+        if (row.getCell(5) == null) {
+            row.createCell(5, CellType.STRING);
+        }
+        row.getCell(5).setCellValue(outDateTime.format(formatter));
     }
 }
