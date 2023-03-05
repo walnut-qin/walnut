@@ -4,7 +4,10 @@ import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kaos.walnut.api.data.entity.MedAnesthesiaEvent;
 import com.kaos.walnut.api.data.entity.MedOperationMaster;
+import com.kaos.walnut.api.data.mapper.MedAnesthesiaEventMapper;
 import com.kaos.walnut.api.data.mapper.MedOperationMasterMapper;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -25,6 +28,12 @@ public class EditorService {
     MedOperationMasterMapper medOperationMasterMapper;
 
     /**
+     * 手术事件接口
+     */
+    @Autowired
+    MedAnesthesiaEventMapper medAnesthesiaEventMapper;
+
+    /**
      * 制作假数据
      * 
      * @param orgData
@@ -41,10 +50,11 @@ public class EditorService {
             var row = sheet.getRow(i);
 
             // 修改数据
-            this.makeFakeRow(row);
+            // this.makeFakeRowPacu(row);
+            this.makeFakeRowEvent(row);
 
             // 达到指定行数后结束逻辑
-            if (i == 6832) {
+            if (i == 179) {
                 break;
             }
         }
@@ -57,7 +67,7 @@ public class EditorService {
      * 
      * @param row
      */
-    private void makeFakeRow(Row row) {
+    private void makeFakeRowPacu(Row row) {
         // 读取主键
         var patientId = row.getCell(0).toString();
         var visitId = Double.valueOf(row.getCell(1).toString()).intValue();
@@ -75,6 +85,20 @@ public class EditorService {
         var inDateTime = endDataTime.plus(Duration.ofSeconds(RandomUtil.randomLong(300, 600)));
         var outDateTime = inDateTime.plus(Duration.ofSeconds(RandomUtil.randomLong(600, 1200)));
 
+        // 修改数据库
+        var updateWrapper = new UpdateWrapper<MedOperationMaster>().lambda();
+        updateWrapper.eq(MedOperationMaster::getPatientId, patientId);
+        updateWrapper.eq(MedOperationMaster::getVisitId, visitId);
+        updateWrapper.eq(MedOperationMaster::getOperId, operId);
+
+        var inUpdateWrapper = updateWrapper.clone();
+        inUpdateWrapper.set(MedOperationMaster::getInPacuDateTime, inDateTime);
+        this.medOperationMasterMapper.update(null, inUpdateWrapper);
+
+        var outUpdateWrapper = updateWrapper.clone();
+        outUpdateWrapper.set(MedOperationMaster::getOutPacuDateTime, outDateTime);
+        this.medOperationMasterMapper.update(null, outUpdateWrapper);
+
         // 设置新的复苏时间
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (row.getCell(4) == null) {
@@ -85,5 +109,34 @@ public class EditorService {
             row.createCell(5, CellType.STRING);
         }
         row.getCell(5).setCellValue(outDateTime.format(formatter));
+    }
+
+    /**
+     * 造行数据
+     * 
+     * @param row
+     */
+    private void makeFakeRowEvent(Row row) {
+        // 读取主键
+        var patientId = row.getCell(0).toString();
+        var visitId = Double.valueOf(row.getCell(1).toString()).intValue();
+        var operId = Double.valueOf(row.getCell(2).toString()).intValue();
+
+        // 修改数据库
+        var event = new MedAnesthesiaEvent();
+        event.setPatientId(patientId);
+        event.setVisitId(visitId);
+        event.setOperId(operId);
+        event.setItemNo(999);
+        event.setItemClass("1");
+        event.setEventNo(0);
+        event.setItemName("术后镇痛");
+        this.medAnesthesiaEventMapper.insert(event);
+
+        // 设置新的复苏时间
+        if (row.getCell(3) == null) {
+            row.createCell(3, CellType.STRING);
+        }
+        row.getCell(3).setCellValue("1");
     }
 }
