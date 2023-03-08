@@ -345,6 +345,41 @@ public class PrivilegeService {
      * @param icd
      * @param doctor
      */
+    private void clearPrivilege(MetComIcdOperation icd, DawnOrgDept department) {
+        // 解析权限字段
+        List<String> codes = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDeptCode())) {
+            codes.addAll(Arrays.asList(icd.getDeptCode().split("\\|")));
+        }
+        List<String> names = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDeptName())) {
+            names.addAll(Arrays.asList(icd.getDeptName().split("\\|")));
+        }
+
+        // 删除医师信息
+        if (codes.contains(department.getDeptCode())) {
+            codes.remove(department.getDeptCode());
+            icd.setDeptCode(StringUtils.join(codes, "|"));
+        }
+        if (names.contains(department.getDeptName())) {
+            names.remove(department.getDeptName());
+            icd.setDeptName(StringUtils.join(names, "|"));
+        }
+
+        // 回写数据库
+        var wrapper = new UpdateWrapper<MetComIcdOperation>().lambda();
+        wrapper.eq(MetComIcdOperation::getIcdCode, icd.getIcdCode());
+        wrapper.set(MetComIcdOperation::getDeptCode, icd.getDeptCode());
+        wrapper.set(MetComIcdOperation::getDeptName, icd.getDeptName());
+        this.icdMapper.update(null, wrapper);
+    }
+
+    /**
+     * 删除某个医师的某个权限
+     * 
+     * @param icd
+     * @param doctor
+     */
     private void clearPrivilege(MetComIcdOperation icd, DawnOrgEmpl doctor) {
         // 解析权限字段
         List<String> codes = Lists.newArrayList();
@@ -375,7 +410,7 @@ public class PrivilegeService {
     }
 
     @Transactional
-    public void clearPrivilege(String docCode) {
+    public void clearDoctPrivilege(String docCode) {
         // 检索医生实体
         var doctor = this.emplMapper.selectById(docCode);
         if (doctor == null) {
@@ -390,6 +425,25 @@ public class PrivilegeService {
         // 轮训删除医师权限
         for (var icd : icds) {
             this.clearPrivilege(icd, doctor);
+        }
+    }
+
+    @Transactional
+    public void clearDeptPrivilege(String deptCode) {
+        // 检索医生实体
+        var department = this.deptMapper.selectById(deptCode);
+        if (department == null) {
+            throw new RuntimeException("科室不存在");
+        }
+
+        // 检索所有有权限的手术
+        var wrapper = new QueryWrapper<MetComIcdOperation>().lambda();
+        wrapper.like(MetComIcdOperation::getDeptCode, department.getDeptCode());
+        var icds = this.icdMapper.selectList(wrapper);
+
+        // 轮训删除医师权限
+        for (var icd : icds) {
+            this.clearPrivilege(icd, department);
         }
     }
 }

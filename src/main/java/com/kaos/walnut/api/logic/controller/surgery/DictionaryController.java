@@ -1,7 +1,6 @@
 package com.kaos.walnut.api.logic.controller.surgery;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 import com.kaos.walnut.api.logic.service.surgery.PrivilegeService;
 import com.kaos.walnut.core.tool.lock.Lock;
@@ -54,7 +53,13 @@ public class DictionaryController {
     @ApiName("清空某个医师的权限")
     @RequestMapping(value = "clearPrivilege", method = RequestMethod.POST, produces = MediaType.JSON)
     Object clearPrivilege(@RequestBody @Valid ClearPrivilege.ReqBody reqBody) {
-        this.privilegeService.clearPrivilege(reqBody.emplCode);
+        if (reqBody.emplCode != null) {
+            this.privilegeService.clearDoctPrivilege(reqBody.emplCode);
+        }
+
+        if (reqBody.deptCode != null) {
+            this.privilegeService.clearDeptPrivilege(reqBody.deptCode);
+        }
         return ObjectUtils.EMPTY;
     }
 
@@ -63,8 +68,15 @@ public class DictionaryController {
          * 请求body
          */
         class ReqBody {
-            @NotBlank(message = "医师编码不能为空")
+            /**
+             * 医师编码
+             */
             String emplCode;
+
+            /**
+             * 科室编码
+             */
+            String deptCode;
         }
     }
 }
