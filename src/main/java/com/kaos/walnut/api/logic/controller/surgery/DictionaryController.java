@@ -1,6 +1,10 @@
 package com.kaos.walnut.api.logic.controller.surgery;
 
+import java.util.List;
+
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.kaos.walnut.api.logic.service.surgery.PrivilegeService;
 import com.kaos.walnut.core.tool.lock.Lock;
@@ -50,7 +54,7 @@ public class DictionaryController {
         });
     }
 
-    @ApiName("清空某个医师的权限")
+    @ApiName("清空权限")
     @RequestMapping(value = "clearPrivilege", method = RequestMethod.POST, produces = MediaType.JSON)
     Object clearPrivilege(@RequestBody @Valid ClearPrivilege.ReqBody reqBody) {
         if (reqBody.emplCode != null) {
@@ -77,6 +81,74 @@ public class DictionaryController {
              * 科室编码
              */
             String deptCode;
+        }
+    }
+
+    @ApiName("添加某个科室的权限")
+    @RequestMapping(value = "addDeptPrivilege", method = RequestMethod.POST, produces = MediaType.JSON)
+    Object addDeptPrivilege(@RequestBody @Valid AddDeptPrivilege.ReqBody reqBody) {
+        this.privilegeService.addDeptPrivilege(reqBody.deptCode, reqBody.icdCodes);
+        return ObjectUtils.EMPTY;
+    }
+
+    public class AddDeptPrivilege {
+        /**
+         * 请求body
+         */
+        class ReqBody {
+            /**
+             * 科室编码
+             */
+            @NotBlank(message = "科室不能为空")
+            String deptCode;
+
+            /**
+             * 手术项目
+             */
+            @NotNull(message = "手术不能为空")
+            List<String> icdCodes;
+        }
+    }
+
+    @ApiName("添加某个医师的权限")
+    @RequestMapping(value = "addDoctPrivilege", method = RequestMethod.POST, produces = MediaType.JSON)
+    Object addDoctPrivilege(@RequestBody @Valid AddDoctPrivilege.ReqBody reqBody) {
+        if (reqBody.icdCodes != null) {
+            this.privilegeService.addDoctPrivilege(reqBody.emplCode, reqBody.icdCodes);
+        }
+
+        if (reqBody.deptCode != null && reqBody.level != null) {
+            this.privilegeService.addDoctPrivilege(reqBody.emplCode, reqBody.deptCode, reqBody.level);
+        }
+
+        return ObjectUtils.EMPTY;
+    }
+
+    public class AddDoctPrivilege {
+        /**
+         * 请求body
+         */
+        class ReqBody {
+            /**
+             * 科室编码
+             */
+            @NotBlank(message = "医师不能为空")
+            String emplCode;
+
+            /**
+             * 手术项目
+             */
+            List<String> icdCodes;
+
+            /**
+             * 科室编码
+             */
+            String deptCode;
+
+            /**
+             * 科室编码
+             */
+            Integer level;
         }
     }
 }

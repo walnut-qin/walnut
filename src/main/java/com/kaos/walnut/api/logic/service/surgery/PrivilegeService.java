@@ -539,6 +539,33 @@ public class PrivilegeService {
     }
 
     @Transactional
+    public void addDoctPrivilege(String docCode, String deptCode, Integer level) {
+        // 检索医生实体
+        var doctor = this.emplMapper.selectById(docCode);
+        if (doctor == null) {
+            throw new RuntimeException("医师不存在");
+        }
+
+        // 检索科室实体
+        var department = this.deptMapper.selectById(deptCode);
+        if (department == null) {
+            throw new RuntimeException("科室不存在");
+        }
+
+        // 检索指定手术
+        var wrapper = new QueryWrapper<MetComIcdOperation>().lambda();
+        wrapper.like(MetComIcdOperation::getDeptCode, department.getDeptCode());
+        wrapper.eq(MetComIcdOperation::getLevel, level);
+        var icds = this.icdMapper.selectList(wrapper);
+
+        // 轮训删除医师权限
+        for (var icd : icds) {
+            // 添加手术
+            this.addPrivilege(icd, doctor);
+        }
+    }
+
+    @Transactional
     public void addDeptPrivilege(String deptCode, List<String> icdCodes) {
         // 检索医生实体
         var department = this.deptMapper.selectById(deptCode);

@@ -25,6 +25,12 @@ public class MetComIcdOperation {
     String icdName;
 
     /**
+     * 手术等级
+     */
+    @TableField("OPS_LEVEL")
+    Integer level;
+
+    /**
      * 有效性
      */
     @TableField("VALID_STATE")
