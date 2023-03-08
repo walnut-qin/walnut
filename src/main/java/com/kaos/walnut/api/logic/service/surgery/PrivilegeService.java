@@ -1,6 +1,8 @@
 package com.kaos.walnut.api.logic.service.surgery;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -30,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.var;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -268,7 +271,7 @@ public class PrivilegeService {
      * @param icd
      * @param dept
      */
-    private void updateDoctors(MetComIcdOperation icd, Queue<DawnOrgEmpl> doctors) {
+    private void updateDoctors(MetComIcdOperation icd, Collection<DawnOrgEmpl> doctors) {
         // 构造初始容器
         var codes = Lists.newArrayList();
         if (!StringUtils.isBlank(icd.getDocCode())) {
@@ -289,6 +292,104 @@ public class PrivilegeService {
                 names.add(doctor.getEmplName());
                 icd.setDocName(StringUtils.join(names, "|"));
             }
+        }
+    }
+
+    @Transactional
+    public Integer importDocPriv(Workbook data) {
+        // 锚定sheet
+        var sheet = data.getSheetAt(0);
+
+        // 构造医师列表
+        var doct = this.emplMapper.selectById("007928");
+        var dept = this.deptMapper.selectById(doct.getDeptCode());
+        List<DawnOrgEmpl> doctors = Lists.newArrayList();
+        doctors.add(doct);
+
+        // 轮训
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            // 锚定行
+            var row = sheet.getRow(i);
+
+            // 丢编码
+            var icdCode = row.getCell(0).toString();
+
+            // 检索手术字典记录
+            var icd = this.icdMapper.selectById(icdCode);
+            if (icd == null) {
+                throw new RuntimeException("手术不存在" + icdCode);
+            }
+
+            // 添加科室
+            this.updateDept(icd, dept);
+
+            // 添加权限
+            this.updateDoctors(icd, doctors);
+
+            // 更新数据库
+            var wrapper = new UpdateWrapper<MetComIcdOperation>().lambda();
+            wrapper.eq(MetComIcdOperation::getIcdCode, icd.getIcdCode());
+            wrapper.set(MetComIcdOperation::getDeptCode, icd.getDeptCode());
+            wrapper.set(MetComIcdOperation::getDeptName, icd.getDeptName());
+            wrapper.set(MetComIcdOperation::getDocCode, icd.getDocCode());
+            wrapper.set(MetComIcdOperation::getDocName, icd.getDocName());
+            this.icdMapper.update(null, wrapper);
+        }
+
+        return sheet.getLastRowNum();
+    }
+
+    /**
+     * 删除某个医师的某个权限
+     * 
+     * @param icd
+     * @param doctor
+     */
+    private void clearPrivilege(MetComIcdOperation icd, DawnOrgEmpl doctor) {
+        // 解析权限字段
+        List<String> codes = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDocCode())) {
+            codes.addAll(Arrays.asList(icd.getDocCode().split("\\|")));
+        }
+        List<String> names = Lists.newArrayList();
+        if (!StringUtils.isBlank(icd.getDocName())) {
+            names.addAll(Arrays.asList(icd.getDocName().split("\\|")));
+        }
+
+        // 删除医师信息
+        if (codes.contains(doctor.getEmplCode())) {
+            codes.remove(doctor.getEmplCode());
+            icd.setDocCode(StringUtils.join(codes, "|"));
+        }
+        if (names.contains(doctor.getEmplName())) {
+            names.remove(doctor.getEmplName());
+            icd.setDocName(StringUtils.join(names, "|"));
+        }
+
+        // 回写数据库
+        var wrapper = new UpdateWrapper<MetComIcdOperation>().lambda();
+        wrapper.eq(MetComIcdOperation::getIcdCode, icd.getIcdCode());
+        wrapper.set(MetComIcdOperation::getDocCode, icd.getDocCode());
+        wrapper.set(MetComIcdOperation::getDocName, icd.getDocName());
+        this.icdMapper.update(null, wrapper);
+    }
+
+    @Transactional
+    public void clearPrivilege(String docCode) {
+        // 检索医生实体
+        var doctor = this.emplMapper.selectById(docCode);
+        if (doctor == null) {
+            throw new RuntimeException("医师不存在");
+        }
+
+        // 检索所有有权限的手术
+        var wrapper = new QueryWrapper<MetComIcdOperation>().lambda();
+        wrapper.like(MetComIcdOperation::getDocCode, doctor.getEmplCode());
+        var icds = this.icdMapper.selectList(wrapper);
+
+        // 轮训删除医师权限
+        for (var icd : icds) {
+            this.clearPrivilege(icd, doctor);
         }
     }
 }

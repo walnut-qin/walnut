@@ -1,10 +1,14 @@
 package com.kaos.walnut.api.logic.controller.surgery;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 import com.kaos.walnut.api.logic.service.surgery.PrivilegeService;
 import com.kaos.walnut.core.tool.lock.Lock;
 import com.kaos.walnut.core.tool.lock.LockExecutor;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
+import com.kaos.walnut.core.util.ObjectUtils;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +47,24 @@ public class DictionaryController {
         LockExecutor.clear();
         LockExecutor.link(lock, 0);
         return LockExecutor.execute(() -> {
-            return this.privilegeService.importSurgery(workbook);
+            return this.privilegeService.importDocPriv(workbook);
         });
+    }
+
+    @ApiName("清空某个医师的权限")
+    @RequestMapping(value = "clearPrivilege", method = RequestMethod.POST, produces = MediaType.JSON)
+    Object clearPrivilege(@RequestBody @Valid ClearPrivilege.ReqBody reqBody) {
+        this.privilegeService.clearPrivilege(reqBody.emplCode);
+        return ObjectUtils.EMPTY;
+    }
+
+    public class ClearPrivilege {
+        /**
+         * 请求body
+         */
+        class ReqBody {
+            @NotBlank(message = "医师编码不能为空")
+            String emplCode;
+        }
     }
 }
