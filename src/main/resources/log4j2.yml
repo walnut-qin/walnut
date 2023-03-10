@@ -10,7 +10,7 @@ Configuration:
     Properties: # 定义全局变量
         Property: # 缺省配置（用于开发环境）。其他环境需要在VM参数中指定，如下：
             - name: log.level.console
-              value: info
+              value: WARN
               #日志存放路径
             - name: log.path
               value: ./logs
