@@ -8,11 +8,13 @@ import com.kaos.walnut.api.data.mapper.MetOpsApplyMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * 手术基本业务
  */
 @Service
+@Validated
 public class ApplicationService {
     /**
      * 手术申请单接口
