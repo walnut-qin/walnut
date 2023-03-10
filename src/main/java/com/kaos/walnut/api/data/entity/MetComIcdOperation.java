@@ -28,7 +28,7 @@ public class MetComIcdOperation {
      * 手术等级
      */
     @TableField("OPS_LEVEL")
-    Integer level;
+    Integer surgeryLevel;
 
     /**
      * 有效性

@@ -555,7 +555,7 @@ public class PrivilegeService {
         // 检索指定手术
         var wrapper = new QueryWrapper<MetComIcdOperation>().lambda();
         wrapper.like(MetComIcdOperation::getDeptCode, department.getDeptCode());
-        wrapper.eq(MetComIcdOperation::getLevel, level);
+        wrapper.eq(MetComIcdOperation::getSurgeryLevel, level);
         var icds = this.icdMapper.selectList(wrapper);
 
         // 轮训删除医师权限
