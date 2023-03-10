@@ -28,7 +28,7 @@ public class ApplicationController {
 
     @ApiName("获取手术申请信息")
     @RequestMapping(value = "getInfo", method = RequestMethod.GET, produces = MediaType.JSON)
-    Map<String, Object> getInfo(@RequestParam @NotBlank String applyNo) {
+    Map<String, Object> getInfo(@RequestParam @NotBlank(message = "申请单号不能为空") String applyNo) {
         // 检索数据库
         var application = this.metOpsApplyMapper.selectById(applyNo);
         if (application == null) {
