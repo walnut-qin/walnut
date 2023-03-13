@@ -53,7 +53,7 @@ public class UserService {
         }
 
         // 明文加密
-        var cipher = DigestUtils.md5DigestAsHex(password.getBytes());
+        var cipher = DigestUtils.md5DigestAsHex(password.getBytes()).toUpperCase();
         if (!StringUtils.equals(cipher, access.getPassword())) {
             throw new RuntimeException("密码错误");
         }
