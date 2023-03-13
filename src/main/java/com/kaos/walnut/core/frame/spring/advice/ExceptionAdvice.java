@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
+import com.kaos.walnut.core.type.exceptions.TokenExpireException;
+
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -68,5 +70,19 @@ class ExceptionAdvice {
         var errMsg = ex.getConstraintViolations().stream().map(x -> x.getMessage()).collect(Collectors.joining(";"));
         log.error(errMsg);
         return new Wrapper(-1, errMsg, null);
+    }
+
+    /**
+     * class注解的校验异常处理
+     * 
+     * @param ex
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler(value = TokenExpireException.class)
+    public Wrapper exceptionHandler(TokenExpireException ex) {
+        var errMsg = "token已过期";
+        log.error(errMsg);
+        return new Wrapper(-2, errMsg, null);
     }
 }
