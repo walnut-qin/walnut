@@ -3,6 +3,8 @@ package com.kaos.walnut.api.logic.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kaos.walnut.api.data.entity.KaosUserAccess;
 import com.kaos.walnut.api.data.entity.KaosUserRole;
 import com.kaos.walnut.api.data.mapper.KaosUserAccessMapper;
 import com.kaos.walnut.api.data.mapper.KaosUserMapper;
@@ -11,6 +13,7 @@ import com.kaos.walnut.core.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 @Service
@@ -34,18 +37,12 @@ public class UserService {
     KaosUserRoleMapper kaosUserRoleMapper;
 
     /**
-     * 登录检查
+     * 校验密码
      * 
      * @param username
      * @param password
      */
-    public List<String> signInCheck(String username, String password) {
-        // 读取用户实体
-        var user = this.kaosUserMapper.selectById(username);
-        if (user == null) {
-            throw new RuntimeException("用户不存在");
-        }
-
+    private void checkPassword(String username, String password) {
         // 读取密码
         var access = this.kaosUserAccessMapper.selectById(username);
         if (access == null) {
@@ -57,6 +54,24 @@ public class UserService {
         if (!StringUtils.equals(cipher, access.getPassword())) {
             throw new RuntimeException("密码错误");
         }
+    }
+
+    /**
+     * 登录检查
+     * 
+     * @param username
+     * @param password
+     */
+    @Transactional
+    public List<String> signInCheck(String username, String password) {
+        // 读取用户实体
+        var user = this.kaosUserMapper.selectById(username);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+
+        // 校验密码
+        this.checkPassword(username, password);
 
         // 检索角色
         var wrapper = new QueryWrapper<KaosUserRole>().lambda();
@@ -72,5 +87,31 @@ public class UserService {
         }).toList();
 
         return roleStrings;
+    }
+
+    /**
+     * 修改密码
+     * 
+     * @param username
+     * @param oldPassword
+     * @param newPassword
+     */
+    @Transactional
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        // 读取用户实体
+        var user = this.kaosUserMapper.selectById(username);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+
+        // 校验旧密码
+        this.checkPassword(username, oldPassword);
+
+        // 更新密码
+        var cipher = DigestUtils.md5DigestAsHex(newPassword.getBytes()).toUpperCase();
+        var wrapper = new UpdateWrapper<KaosUserAccess>().lambda();
+        wrapper.set(KaosUserAccess::getPassword, cipher);
+        wrapper.eq(KaosUserAccess::getUserCode, user.getUserCode());
+        this.kaosUserAccessMapper.update(null, wrapper);
     }
 }

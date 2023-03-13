@@ -7,9 +7,12 @@ import javax.validation.constraints.NotBlank;
 
 import com.kaos.walnut.api.logic.service.TokenService;
 import com.kaos.walnut.api.logic.service.UserService;
+import com.kaos.walnut.core.frame.entity.User;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
 import com.kaos.walnut.core.type.annotations.PassToken;
+import com.kaos.walnut.core.util.ObjectUtils;
+import com.kaos.walnut.core.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +41,9 @@ public class UserController {
 
     /**
      * 登陆系统
+     * 
+     * @param reqBody
+     * @return
      */
     @ApiName("登陆")
     @PassToken
@@ -83,6 +89,54 @@ public class UserController {
              * 令牌
              */
             String token;
+        }
+    }
+
+    /**
+     * 登出系统
+     */
+    @ApiName("登出")
+    @RequestMapping(value = "signOut", method = RequestMethod.POST, produces = MediaType.JSON)
+    Object signOut() {
+        // do nothing
+        return ObjectUtils.EMPTY;
+    }
+
+    @ApiName("改密码")
+    @RequestMapping(value = "changePassword", method = RequestMethod.POST, produces = MediaType.JSON)
+    Object changePassword(@RequestBody @Valid ChangePassword.ReqBody reqBody) {
+        // 同密码校验
+        if (StringUtils.equals(reqBody.getOldPassword(), reqBody.getNewPassword())) {
+            throw new RuntimeException("新密码与旧密码相同");
+        }
+
+        // 修改密码
+        var username = User.currentUser().getUid();
+        var oldPassword = reqBody.getOldPassword();
+        var newPassword = reqBody.getNewPassword();
+        this.userService.changePassword(username, oldPassword, newPassword);
+
+        // 响应一个空对象
+        return ObjectUtils.EMPTY;
+    }
+
+    static class ChangePassword {
+        /**
+         * 请求参数
+         */
+        @Data
+        static class ReqBody {
+            /**
+             * 用户名
+             */
+            @NotBlank(message = "旧密码不能为空")
+            String oldPassword;
+
+            /**
+             * 密码
+             */
+            @NotBlank(message = "新密码不能为空")
+            String newPassword;
         }
     }
 }
