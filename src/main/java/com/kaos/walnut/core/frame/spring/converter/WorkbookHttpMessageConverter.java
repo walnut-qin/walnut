@@ -16,6 +16,7 @@ import java.nio.charset.Charset;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -39,7 +40,8 @@ class WorkbookHttpMessageConverter extends AbstractHttpMessageConverter<Workbook
     @Override
     protected Workbook readInternal(Class<? extends Workbook> clazz, HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
-        return null;
+        // 仅支持xlsx
+        return new XSSFWorkbook(inputMessage.getBody());
     }
 
     @Override

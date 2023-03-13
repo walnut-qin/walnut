@@ -1,11 +1,16 @@
+# 共有8个级别，按照从低到高为：ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+# intLevel值依次为0,100,200,300,400,500,600,700
+# intLevel值越小，级别越高
 Configuration:
+    # 日志框架本身的级别
     status: warn
+    # 自动加载配置文件的时间间隔
     monitorinterval: 5
 
     Properties: # 定义全局变量
         Property: # 缺省配置（用于开发环境）。其他环境需要在VM参数中指定，如下：
             - name: log.level.console
-              value: info
+              value: WARN
               #日志存放路径
             - name: log.path
               value: ./logs
@@ -25,6 +30,42 @@ Configuration:
                 #显示日志模板
                 pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n"
         RollingFile:
+            - name: DEBUG_FILE
+              ignoreExceptions: false
+              fileName: ${log.path}/debug/${project.name}.log
+              filePattern: "${log.path}/debug/${project.name}-%d{yyyy-MM-dd}-%i.log"
+              PatternLayout:
+                  #日志
+                  charset: "UTF-8"
+                  pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p [%t] [%F:%L] - %m%n"
+              ThresholdFilter:
+                - level: INFO
+                  onMatch: DENY
+                  onMismatch: NEUTRAL
+                - level: DEBUG
+                  onMatch: ACCEPT
+                  onMismatch: DENY
+              Policies:
+                  SizeBasedTriggeringPolicy:
+                      #文件超过多少进行切割
+                      size: "100 MB"
+                  TimeBasedTriggeringPolicy:
+                      interval: 1
+                      modulate: true
+              DefaultRolloverStrategy:
+                  #当天最多有多少个文件存在
+                  max: 20
+                  #重点删除规则
+                  Delete:
+                      #删除文件的根路径
+                      basePath: ${log.path}
+                      maxDepth: 2
+                      IfFileName:
+                          #删除日志匹配规则
+                          glob: "${project.name}-*.log"
+                      IfLastModified:
+                          #保留多少天的日志
+                          age: "20d"
             - name: INFO_FILE
               ignoreExceptions: false
               fileName: ${log.path}/info/${project.name}.log
@@ -129,6 +170,7 @@ Configuration:
             level: info
             AppenderRef:
                 - ref: CONSOLE
+                - ref: DEBUG_FILE
                 - ref: INFO_FILE
                 - ref: WARN_FILE
                 - ref: ERROR_FILE

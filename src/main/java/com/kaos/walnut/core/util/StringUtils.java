@@ -179,4 +179,15 @@ public final class StringUtils {
             throw new RuntimeException(ex.getMessage());
         }
     }
+
+    /**
+     * 容器转string
+     * 
+     * @param iterable
+     * @param separator
+     * @return
+     */
+    public static String join(Iterable<?> iterable, String separator) {
+        return org.apache.commons.lang3.StringUtils.join(iterable, separator);
+    }
 }
