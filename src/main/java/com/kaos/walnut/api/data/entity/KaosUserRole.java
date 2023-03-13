@@ -1,6 +1,5 @@
 package com.kaos.walnut.api.data.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.kaos.walnut.core.util.ObjectUtils;
@@ -8,9 +7,12 @@ import com.kaos.walnut.core.util.StringUtils;
 
 import lombok.Data;
 
+/**
+ * 用户角色
+ */
 @Data
-@TableName("KAOS_USER_ACCESS")
-public class KaosUserAccess {
+@TableName("KAOS.KAOS_USER_ROLE")
+public class KaosUserRole {
     /**
      * 用户编码
      */
@@ -20,26 +22,21 @@ public class KaosUserAccess {
     /**
      * 用户名称
      */
-    @TableField("PASSWORD")
-    String password;
-
-    /**
-     * token掩码
-     */
-    @TableField("TOKEN_MASK")
-    String tokenMask;
+    @TableId("ROLE")
+    String role;
 
     @Override
     public boolean equals(Object arg0) {
-        if (arg0 instanceof KaosUserAccess) {
-            var that = (KaosUserAccess) arg0;
-            return StringUtils.equals(this.userCode, that.userCode);
+        if (arg0 instanceof KaosUserRole) {
+            var that = (KaosUserRole) arg0;
+            return StringUtils.equals(this.userCode, that.userCode)
+                    && StringUtils.equals(this.role, that.role);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return ObjectUtils.hashCode(userCode);
+        return ObjectUtils.hashCode(userCode, role);
     }
 }
