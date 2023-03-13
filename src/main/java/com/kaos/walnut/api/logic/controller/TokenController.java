@@ -35,55 +35,6 @@ public class TokenController {
      * @return
      */
     @PassToken
-    @ApiName("生成token")
-    @RequestMapping(value = "gen", method = RequestMethod.POST, produces = MediaType.JSON)
-    Gen.RspBody gen(@RequestBody @Valid Gen.ReqBody reqBody) throws Exception {
-        // 调用服务
-        var token = this.tokenService.genToken(reqBody.getUid());
-        if (token == null) {
-            throw new RuntimeException("生成token失败");
-        }
-
-        // 构造响应
-        var rspBuilder = Gen.RspBody.builder();
-        rspBuilder.token(token);
-        return rspBuilder.build();
-    }
-
-    /**
-     * 实体
-     */
-    static class Gen {
-        /**
-         * 请求body
-         */
-        @Data
-        static class ReqBody {
-            /**
-             * 待校验token
-             */
-            String uid;
-        }
-
-        /**
-         * 响应body
-         */
-        @Builder
-        static class RspBody {
-            /**
-             * 新token
-             */
-            String token;
-        }
-    }
-
-    /**
-     * 校验token
-     * 
-     * @param reqBody
-     * @return
-     */
-    @PassToken
     @ApiName("校验token")
     @RequestMapping(value = "check", method = RequestMethod.POST, produces = MediaType.JSON)
     Check.RspBody check(@RequestBody @Valid Check.ReqBody reqBody) throws Exception {
