@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.kaos.walnut.core.frame.entity.User;
 import com.kaos.walnut.core.tool.RestTemplateWrapper;
 import com.kaos.walnut.core.type.annotations.PassToken;
+import com.kaos.walnut.core.type.exceptions.TokenExpireException;
 
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -97,7 +98,7 @@ class TokenInterceptor implements HandlerInterceptor {
          * @param response
          * @return
          */
-        public User checkToken(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+        public User checkToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
             // 获取token
             String token = request.getHeader("W-Token");
             if (token == null) {
@@ -111,14 +112,20 @@ class TokenInterceptor implements HandlerInterceptor {
 
             // 发送校验请求
             var rspBody = restTemplateWrapper.post("/api/token/check", reqBodyBuilder.build(), RspBody.class);
-            if (rspBody.getCode() != 0) {
-                throw new RuntimeException(rspBody.getMessage());
-            } else if (rspBody.getData().getToken() != null) {
-                response.setHeader("Access-Control-Expose-Headers", "W-Token");
-                response.setHeader("W-Token", rspBody.getData().getToken());
-            }
+            switch (rspBody.getCode()) {
+                case 0:
+                    if (rspBody.getData().getToken() != null) {
+                        response.setHeader("Access-Control-Expose-Headers", "W-Token");
+                        response.setHeader("W-Token", rspBody.getData().getToken());
+                    }
+                    return rspBody.getData().getUser();
 
-            return rspBody.getData().getUser();
+                case -2:
+                    throw new TokenExpireException(rspBody.getMessage());
+
+                default:
+                    throw new RuntimeException(rspBody.getMessage());
+            }
         }
 
         @Data
