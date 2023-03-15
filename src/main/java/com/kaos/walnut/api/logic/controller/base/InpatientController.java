@@ -98,7 +98,7 @@ public class InpatientController {
 
         // 加入病区信息
         var nurseCell = this.dawnOrgDeptMapper.selectById(inpatient.getNurseCellCode());
-        if (dept != null) {
+        if (nurseCell != null) {
             Map<String, Object> node = Maps.newHashMap();
             node.put("code", nurseCell.getDeptCode());
             node.put("name", nurseCell.getDeptName());
@@ -108,7 +108,7 @@ public class InpatientController {
 
         // 加入住院医师信息
         var houseDoc = this.dawnOrgEmplMapper.selectById(inpatient.getHouseDocCode());
-        if (dept != null) {
+        if (houseDoc != null) {
             Map<String, Object> node = Maps.newHashMap();
             node.put("code", houseDoc.getEmplCode());
             node.put("name", houseDoc.getEmplName());
@@ -117,7 +117,7 @@ public class InpatientController {
 
         // 加入上级医师信息
         var chargeDoc = this.dawnOrgEmplMapper.selectById(inpatient.getChargeDocCode());
-        if (dept != null) {
+        if (chargeDoc != null) {
             Map<String, Object> node = Maps.newHashMap();
             node.put("code", chargeDoc.getEmplCode());
             node.put("name", chargeDoc.getEmplName());
@@ -126,7 +126,7 @@ public class InpatientController {
 
         // 加入住院医师信息
         var chiefDoc = this.dawnOrgEmplMapper.selectById(inpatient.getChiefDocCode());
-        if (dept != null) {
+        if (chiefDoc != null) {
             Map<String, Object> node = Maps.newHashMap();
             node.put("code", chiefDoc.getEmplCode());
             node.put("name", chiefDoc.getEmplName());
