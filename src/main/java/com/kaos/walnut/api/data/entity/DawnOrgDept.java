@@ -3,6 +3,7 @@ package com.kaos.walnut.api.data.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.kaos.walnut.api.data.enums.DeptOwnEnum;
 import com.kaos.walnut.api.data.enums.ValidStateEnum;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
@@ -23,6 +24,12 @@ public class DawnOrgDept {
      */
     @TableField("DEPT_NAME")
     String deptName;
+
+    /**
+     * 院区
+     */
+    @TableField("DEPTOWN")
+    DeptOwnEnum deptOwn;
 
     /**
      * 有效性
