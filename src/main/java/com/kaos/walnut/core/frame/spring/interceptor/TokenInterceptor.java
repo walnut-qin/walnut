@@ -16,10 +16,10 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.kaos.walnut.core.frame.entity.User;
 import com.kaos.walnut.core.tool.RestTemplateWrapper;
 import com.kaos.walnut.core.type.annotations.PassToken;
-import com.kaos.walnut.core.type.exceptions.TokenExpireException;
 
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -121,7 +121,7 @@ class TokenInterceptor implements HandlerInterceptor {
                     return rspBody.getData().getUser();
 
                 case -2:
-                    throw new TokenExpireException(rspBody.getMessage());
+                    throw new TokenExpiredException(rspBody.getMessage(), null);
 
                 default:
                     throw new RuntimeException(rspBody.getMessage());
