@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
-
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -70,19 +68,5 @@ class ExceptionAdvice {
         var errMsg = ex.getConstraintViolations().stream().map(x -> x.getMessage()).collect(Collectors.joining(";"));
         log.error(errMsg);
         return new Wrapper(-1, errMsg, null);
-    }
-
-    /**
-     * class注解的校验异常处理
-     * 
-     * @param ex
-     * @return
-     */
-    @ResponseBody
-    @ExceptionHandler(value = TokenExpiredException.class)
-    public Wrapper exceptionHandler(TokenExpiredException ex) {
-        var errMsg = ex.getMessage();
-        log.error(errMsg);
-        return new Wrapper(-2, errMsg, null);
     }
 }
