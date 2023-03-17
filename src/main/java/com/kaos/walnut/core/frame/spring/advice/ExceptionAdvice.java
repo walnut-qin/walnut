@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
-import com.kaos.walnut.core.type.exceptions.TokenExpireException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -79,9 +79,9 @@ class ExceptionAdvice {
      * @return
      */
     @ResponseBody
-    @ExceptionHandler(value = TokenExpireException.class)
-    public Wrapper exceptionHandler(TokenExpireException ex) {
-        var errMsg = "token已过期";
+    @ExceptionHandler(value = TokenExpiredException.class)
+    public Wrapper exceptionHandler(TokenExpiredException ex) {
+        var errMsg = ex.getMessage();
         log.error(errMsg);
         return new Wrapper(-2, errMsg, null);
     }
