@@ -25,6 +25,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -115,7 +116,7 @@ class TokenInterceptor implements HandlerInterceptor {
                 throw new RuntimeException(rspBody.getMessage());
             }
 
-            return rspBody.getUser();
+            return rspBody.getData().getUser();
         }
 
         @Data
@@ -127,7 +128,7 @@ class TokenInterceptor implements HandlerInterceptor {
             String token;
         }
 
-        @Data
+        @Getter
         static class RspBody {
             /**
              * 响应码
@@ -142,7 +143,15 @@ class TokenInterceptor implements HandlerInterceptor {
             /**
              * 响应数据 - 当响应成功时存储登陆用户
              */
-            User user;
+            Data data;
+
+            static class Data {
+                /**
+                 * 登陆用户
+                 */
+                @Getter
+                User user;
+            }
         }
     }
 }
