@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.kaos.walnut.core.frame.entity.User;
 import com.kaos.walnut.core.tool.RestTemplateWrapper;
 import com.kaos.walnut.core.type.annotations.PassToken;
@@ -112,20 +111,11 @@ class TokenInterceptor implements HandlerInterceptor {
 
             // 发送校验请求
             var rspBody = restTemplateWrapper.post("/api/token/check", reqBodyBuilder.build(), RspBody.class);
-            switch (rspBody.getCode()) {
-                case 0:
-                    if (rspBody.getData().getToken() != null) {
-                        response.setHeader("Access-Control-Expose-Headers", "W-Token");
-                        response.setHeader("W-Token", rspBody.getData().getToken());
-                    }
-                    return rspBody.getData().getUser();
-
-                case -2:
-                    throw new TokenExpiredException(rspBody.getMessage(), null);
-
-                default:
-                    throw new RuntimeException(rspBody.getMessage());
+            if (rspBody.getCode() != 0) {
+                throw new RuntimeException(rspBody.getMessage());
             }
+
+            return rspBody.getUser();
         }
 
         @Data
@@ -150,25 +140,9 @@ class TokenInterceptor implements HandlerInterceptor {
             String message;
 
             /**
-             * 响应数据 - 当响应成功时存储响应结果
+             * 响应数据 - 当响应成功时存储登陆用户
              */
-            TokenData data;
-
-            /**
-             * 数据内容
-             */
-            @Data
-            static class TokenData {
-                /**
-                 * 用户
-                 */
-                User user = null;
-
-                /**
-                 * 新token
-                 */
-                String token = null;
-            }
+            User user;
         }
     }
 }
