@@ -106,7 +106,7 @@ public class UserController {
 
     @ApiName("改密码")
     @RequestMapping(value = "changePassword", method = RequestMethod.POST, produces = MediaType.JSON)
-    ChangePassword.RspBody changePassword(@RequestBody @Valid ChangePassword.ReqBody reqBody) {
+    Object changePassword(@RequestBody @Valid ChangePassword.ReqBody reqBody) {
         // 同密码校验
         if (StringUtils.equals(reqBody.getOldPassword(), reqBody.getNewPassword())) {
             throw new RuntimeException("新密码与旧密码相同");
@@ -118,10 +118,7 @@ public class UserController {
         var newPassword = reqBody.getNewPassword();
         this.userService.changePassword(username, oldPassword, newPassword);
 
-        // 构造响应对象
-        var result = new ChangePassword.RspBody();
-        result.setToken(this.tokenService.genToken(username));
-        return result;
+        return ObjectUtils.EMPTY;
     }
 
     static class ChangePassword {
@@ -141,17 +138,6 @@ public class UserController {
              */
             @NotBlank(message = "新密码不能为空")
             String newPassword;
-        }
-
-        /**
-         * 响应参数
-         */
-        @Data
-        static class RspBody {
-            /**
-             * 因为密码改变, 旧token会失效, 需要更新token
-             */
-            String token;
         }
     }
 }

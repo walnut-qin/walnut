@@ -39,15 +39,14 @@ public class TokenController {
     @RequestMapping(value = "check", method = RequestMethod.POST, produces = MediaType.JSON)
     Check.RspBody check(@RequestBody @Valid Check.ReqBody reqBody) throws Exception {
         // 调用服务
-        var info = this.tokenService.parseToken(reqBody.getToken());
-        if (info == null) {
+        var user = this.tokenService.parseToken(reqBody.getToken());
+        if (user == null) {
             throw new RuntimeException("检查token失败");
         }
 
         // 构造响应
         var rspBuilder = Check.RspBody.builder();
-        rspBuilder.user(info.getFirst());
-        rspBuilder.token(info.getSecond());
+        rspBuilder.user(user);
         return rspBuilder.build();
     }
 
@@ -75,11 +74,6 @@ public class TokenController {
              * 用户
              */
             User user;
-
-            /**
-             * 新token
-             */
-            String token;
         }
     }
 }
