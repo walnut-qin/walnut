@@ -44,7 +44,7 @@ public class TokenService {
     public String genToken(String uid) {
         var builder = JWT.create();
         builder.withClaim("uid", uid);
-        builder.withExpiresAt(OffsetDateTime.now().plus(Duration.ofMinutes(5)).toInstant());
+        builder.withExpiresAt(OffsetDateTime.now().plus(Duration.ofHours(1)).toInstant());
         return builder.sign(Algorithm.HMAC256(secret));
     }
 
