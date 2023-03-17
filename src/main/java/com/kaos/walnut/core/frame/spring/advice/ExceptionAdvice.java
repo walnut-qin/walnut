@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -68,5 +70,19 @@ class ExceptionAdvice {
         var errMsg = ex.getConstraintViolations().stream().map(x -> x.getMessage()).collect(Collectors.joining(";"));
         log.error(errMsg);
         return new Wrapper(-1, errMsg, null);
+    }
+
+    /**
+     * class注解的校验异常处理
+     * 
+     * @param ex
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler(value = TokenExpiredException.class)
+    public Wrapper exceptionHandler(TokenExpiredException ex) {
+        var errMsg = ex.getMessage();
+        log.error(errMsg);
+        return new Wrapper(-2, errMsg, null);
     }
 }
