@@ -54,7 +54,7 @@ public final class RestTemplateWrapper {
                 Timer.reset();
                 return restTemplate.postForObject(String.format("http://%s:%d%s", host, port, url), reqBody, classOfT);
             } finally {
-                log.info(String.format("网络调用<%s>耗时<%s>", url, Timer.getValue()));
+                log.debug(String.format("网络调用<%s>耗时<%s>", url, Timer.getValue()));
                 Timer.stop();
             }
         }
@@ -77,7 +77,7 @@ public final class RestTemplateWrapper {
                 Timer.reset();
                 return restTemplate.getForObject(String.format("http://%s:%d%s", host, port, url), classOfT, uriVars);
             } finally {
-                log.info(String.format("网络调用<%s>耗时<%s>", url, Timer.getValue()));
+                log.debug(String.format("网络调用<%s>耗时<%s>", url, Timer.getValue()));
                 Timer.stop();
             }
         }
