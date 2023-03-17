@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kaos.walnut.api.data.cache.KaosUserCache;
 import com.kaos.walnut.api.data.entity.KaosUserAccess;
 import com.kaos.walnut.api.data.entity.KaosUserRole;
 import com.kaos.walnut.api.data.mapper.KaosUserAccessMapper;
-import com.kaos.walnut.api.data.mapper.KaosUserMapper;
 import com.kaos.walnut.api.data.mapper.KaosUserRoleMapper;
 import com.kaos.walnut.core.util.StringUtils;
 
@@ -19,10 +19,10 @@ import org.springframework.util.DigestUtils;
 @Service
 public class UserService {
     /**
-     * 用户接口
+     * 用户信息缓存
      */
     @Autowired
-    KaosUserMapper kaosUserMapper;
+    KaosUserCache kaosUserCache;
 
     /**
      * 用户密码接口
@@ -65,7 +65,7 @@ public class UserService {
     @Transactional
     public List<String> signInCheck(String username, String password) {
         // 读取用户实体
-        var user = this.kaosUserMapper.selectById(username);
+        var user = this.kaosUserCache.get(username);
         if (user == null) {
             throw new RuntimeException("用户不存在");
         }
@@ -99,7 +99,7 @@ public class UserService {
     @Transactional
     public void changePassword(String username, String oldPassword, String newPassword) {
         // 读取用户实体
-        var user = this.kaosUserMapper.selectById(username);
+        var user = this.kaosUserCache.get(username);
         if (user == null) {
             throw new RuntimeException("用户不存在");
         }

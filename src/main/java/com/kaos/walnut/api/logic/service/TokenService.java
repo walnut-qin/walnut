@@ -10,8 +10,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.kaos.walnut.api.data.mapper.KaosUserAccessMapper;
-import com.kaos.walnut.api.data.mapper.KaosUserMapper;
+import com.kaos.walnut.api.data.cache.KaosUserCache;
 import com.kaos.walnut.core.frame.entity.User;
 
 import org.apache.commons.math3.util.Pair;
@@ -34,16 +33,10 @@ public class TokenService {
     static final String secret = "walnut.auth.net";
 
     /**
-     * 用户接口
+     * 用户信息缓存
      */
     @Autowired
-    KaosUserMapper kaosUserMapper;
-
-    /**
-     * 用户接口
-     */
-    @Autowired
-    KaosUserAccessMapper kaosUserAccessMapper;
+    KaosUserCache kaosUserCache;
 
     /**
      * 生成token
@@ -54,7 +47,7 @@ public class TokenService {
     public String genToken(String uid) {
         var builder = JWT.create();
         builder.withClaim("uid", uid);
-        builder.withExpiresAt(OffsetDateTime.now().plus(Duration.ofMinutes(20)).toInstant());
+        builder.withExpiresAt(OffsetDateTime.now().plus(Duration.ofMinutes(4)).toInstant());
         return builder.sign(Algorithm.HMAC256(secret));
     }
 
@@ -99,37 +92,46 @@ public class TokenService {
      * @throws Exception
      */
     private Pair<User, String> parseNormalToken(String token) throws Exception {
-        // 声明解码器
-        String newToken = null;
-
         // token解码
         DecodedJWT decodedJWT = JWT.decode(token);
 
         // token校验
+        String newToken = null;
         try {
             // 校验token
             decodedJWT = JWT.require(Algorithm.HMAC256(secret)).build().verify(decodedJWT);
+
+            // 读取uid
+            var user = this.kaosUserCache.get(decodedJWT.getClaim("uid").asString());
+            if (user == null) {
+                throw new RuntimeException("用户不存在");
+            }
+
+            return new Pair<>(new User(user.getUserCode(), user.getUserName()), null);
         } catch (TokenExpiredException e) {
             // token过期处理
             var expireOn = LocalDateTime.ofInstant(e.getExpiredOn(), ZoneId.systemDefault());
 
-            // 若超时超过10分钟
-            if (expireOn.plus(Duration.ofMinutes(10)).isBefore(LocalDateTime.now())) {
+            // 若超时超过6分钟
+            if (expireOn.plus(Duration.ofMinutes(6)).isBefore(LocalDateTime.now())) {
                 throw e;
             }
 
+            // 读取uid
+            var uid = decodedJWT.getClaim("uid").asString();
+
+            // 读取uid
+            var user = this.kaosUserCache.get(uid);
+            if (user == null) {
+                throw new RuntimeException("用户不存在");
+            }
+
             // 分配新token
-            newToken = this.genToken(decodedJWT.getClaim("uid").asString());
+            newToken = this.genToken(uid);
+
+            return new Pair<>(new User(user.getUserCode(), user.getUserName()), newToken);
         } catch (Exception e) {
             throw new RuntimeException("token校验失败");
         }
-
-        // 读取用户信息
-        var user = kaosUserMapper.selectById(decodedJWT.getClaim("uid").asString());
-        if (user == null) {
-            throw new RuntimeException("用户不存在");
-        }
-
-        return new Pair<>(new User(user.getUserCode(), user.getUserName()), newToken);
     }
 }
