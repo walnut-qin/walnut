@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Queues;
+import com.google.gson.reflect.TypeToken;
 import com.kaos.walnut.api.data.entity.FinIpbInPrepay;
 import com.kaos.walnut.api.data.entity.FinOprPayModel;
 import com.kaos.walnut.api.data.mapper.FinIpbInPrepayMapper;
@@ -77,21 +78,15 @@ public class PrepayService {
             }
 
             // 记录修改日志
-            History history = null;
-            if (!StringUtils.isBlank(prepay.getHistory())) {
-                history = ObjectUtils.deserialize(prepay.getHistory(), History.class);
-            } else {
-                history = new History();
-            }
+            History history = new History(prepay.getHistory());
             history.push(prepay.getPrepayCost(), newCost);
-            var historyString = ObjectUtils.serialize(history);
 
             // 修改数据库
             var updateWrapper = new UpdateWrapper<FinIpbInPrepay>().lambda();
             updateWrapper.eq(FinIpbInPrepay::getInpatientNo, prepay.getInpatientNo());
             updateWrapper.eq(FinIpbInPrepay::getHappenNo, prepay.getHappenNo());
             updateWrapper.set(FinIpbInPrepay::getPrepayCost, newCost);
-            updateWrapper.set(FinIpbInPrepay::getHistory, historyString);
+            updateWrapper.set(FinIpbInPrepay::getHistory, history.dump());
             this.finIpbInPrepayMapper.update(null, updateWrapper);
         }
     }
@@ -103,7 +98,7 @@ public class PrepayService {
         /**
          * 节点列表
          */
-        Deque<Node> nodes;
+        Deque<Node> nodes = null;
 
         /**
          * 节点结构
@@ -126,12 +121,37 @@ public class PrepayService {
             Double newValue;
         }
 
-        public History() {
-            this.nodes = Queues.newArrayDeque();
+        /**
+         * 从原始字符串构造
+         * 
+         * @param jsonString
+         */
+        public History(String jsonString) {
+            if (StringUtils.isBlank(jsonString)) {
+                this.nodes = Queues.newArrayDeque();
+            } else {
+                this.nodes = ObjectUtils.deserialize(jsonString, new TypeToken<Deque<Node>>() {
+                });
+            }
         }
 
+        /**
+         * 添加新节点
+         * 
+         * @param oldValue
+         * @param newValue
+         */
         public void push(Double oldValue, Double newValue) {
             this.nodes.push(new Node(LocalDateTime.now(), oldValue, newValue));
+        }
+
+        /**
+         * 转为日志
+         * 
+         * @return
+         */
+        public String dump() {
+            return ObjectUtils.serialize(this.nodes);
         }
     }
 }
