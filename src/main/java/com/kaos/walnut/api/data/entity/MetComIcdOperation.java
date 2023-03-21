@@ -19,6 +19,12 @@ public class MetComIcdOperation {
     String icdCode;
 
     /**
+     * 拼音码
+     */
+    @TableField("SPELL_CODE")
+    String spellCode;
+
+    /**
      * 手术名
      */
     @TableField("ICD_NAME")
