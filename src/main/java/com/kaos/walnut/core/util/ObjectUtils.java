@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 
 import com.google.common.base.Objects;
+import com.google.gson.reflect.TypeToken;
 
 public final class ObjectUtils {
     /**
@@ -46,6 +47,18 @@ public final class ObjectUtils {
      */
     public static void serialize(Object object, Writer writer) {
         gsonWrapper.toJson(object, writer);
+    }
+
+    /**
+     * 反序列化
+     * 
+     * @param <T>
+     * @param source
+     * @param typeToken
+     * @return
+     */
+    public static <T> T deserialize(String source, TypeToken<T> typeToken) {
+        return gsonWrapper.fromJson(source, typeToken.getType());
     }
 
     /**
