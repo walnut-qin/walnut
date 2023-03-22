@@ -1,5 +1,6 @@
 package com.kaos.walnut.api.logic.controller.base;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Maps;
+import com.kaos.walnut.api.data.entity.FinIprInMainInfo;
+import com.kaos.walnut.api.data.entity.FinIprInMainInfo.InStateEnum;
 import com.kaos.walnut.api.data.mapper.ComPatientInfoMapper;
 import com.kaos.walnut.api.data.mapper.DawnOrgDeptMapper;
 import com.kaos.walnut.api.data.mapper.DawnOrgEmplMapper;
@@ -134,5 +138,32 @@ public class InpatientController {
         }
 
         return result;
+    }
+
+    /**
+     * 获取住院患者实体
+     * 
+     * @param patientNo
+     * @return
+     */
+    @ApiName("获取住院患者信息")
+    @RequestMapping(value = "getInpatientsInDept", method = RequestMethod.GET, produces = MediaType.JSON)
+    List<Map<String, Object>> getInpatientsInDept(@RequestParam @NotBlank(message = "科室编码不能为空") String deptId) {
+        // 检索科室
+        var dept = this.dawnOrgDeptMapper.selectById(deptId);
+        if (dept == null) {
+            throw new RuntimeException("科室不存在");
+        }
+
+        // 读取住院记录
+        var wrapper = new QueryWrapper<FinIprInMainInfo>().lambda();
+        wrapper.eq(FinIprInMainInfo::getDeptCode, dept.getDeptCode());
+        wrapper.eq(FinIprInMainInfo::getInState, InStateEnum.病房接诊);
+        var inpatients = this.finIprInMainInfoMapper.selectList(wrapper);
+
+        // 实体映射
+        return inpatients.stream().map(x -> {
+            return this.get(x.getPatientNo());
+        }).toList();
     }
 }
