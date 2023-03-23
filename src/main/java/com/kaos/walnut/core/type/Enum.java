@@ -16,5 +16,5 @@ public interface Enum {
      * 
      * @return
      */
-    Object getDescription();
+    String getDescription();
 }

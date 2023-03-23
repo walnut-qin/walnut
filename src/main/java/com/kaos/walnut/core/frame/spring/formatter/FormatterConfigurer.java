@@ -26,7 +26,7 @@ class FormatterConfigurer implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         // 注册枚举解析器工厂
-        registry.addConverterFactory(new ObjectToEnumConverterFactory());
+        registry.addConverterFactory(new StringToEnumConverterFactory());
 
         // 注册时间解析
         registry.addConverter(new StringToDateConverter());
