@@ -132,7 +132,14 @@ class GsonWrapper {
             @Override
             public JsonElement serialize(E src, Type typeOfSrc, JsonSerializationContext context) {
                 if (src != null) {
-                    return new JsonPrimitive(src.getDescription());
+                    var desc = src.getDescription();
+                    if (desc instanceof String) {
+                        return new JsonPrimitive((String) desc);
+                    } else if (desc instanceof Integer) {
+                        return new JsonPrimitive((Integer) desc);
+                    } else if (desc instanceof Double) {
+                        return new JsonPrimitive((Double) desc);
+                    }
                 }
                 return null;
             }
@@ -143,8 +150,19 @@ class GsonWrapper {
                     throws com.google.gson.JsonParseException {
                 Class<E> classOfE = (Class<E>) typeOfT;
                 for (var item : classOfE.getEnumConstants()) {
-                    if (StringUtils.equals(item.getDescription(), json.getAsString())) {
-                        return item;
+                    var desc = item.getDescription();
+                    if (desc instanceof String) {
+                        if (StringUtils.equals((String) desc, json.getAsString())) {
+                            return item;
+                        }
+                    } else if (desc instanceof Integer) {
+                        if (IntegerUtils.equals((Integer) desc, json.getAsInt())) {
+                            return item;
+                        }
+                    } else if (desc instanceof Double) {
+                        if (DoubleUtils.equals((Double) desc, json.getAsDouble())) {
+                            return item;
+                        }
                     }
                 }
                 String err = String.format("反序列化[%s]失败, 值[%s]", classOfE.getName(), json.getAsString());
