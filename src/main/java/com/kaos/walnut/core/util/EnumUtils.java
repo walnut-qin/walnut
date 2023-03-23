@@ -33,10 +33,21 @@ public final class EnumUtils {
      * @param classOfT
      * @return
      */
-    public static <T extends Enum> T fromDescription(String value, Class<T> classOfT) {
-        for (T item : classOfT.getEnumConstants()) {
-            if (StringUtils.equals(item.getDescription(), value)) {
-                return item;
+    public static <T extends Enum> T fromDescription(Object value, Class<T> classOfT) {
+        for (var item : classOfT.getEnumConstants()) {
+            var desc = item.getDescription();
+            if (desc instanceof String) {
+                if (StringUtils.equals((String) desc, (String) value)) {
+                    return item;
+                }
+            } else if (desc instanceof Integer) {
+                if (IntegerUtils.equals((Integer) desc, (Integer) value)) {
+                    return item;
+                }
+            } else if (desc instanceof Double) {
+                if (DoubleUtils.equals((Double) desc, (Double) value)) {
+                    return item;
+                }
             }
         }
         String errMsg = String.format("String转Enum失败, description无对照, [%s -> %s]", value, classOfT.getName());
