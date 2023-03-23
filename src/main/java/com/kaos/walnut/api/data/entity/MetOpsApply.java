@@ -23,7 +23,13 @@ public class MetOpsApply {
     String applyNo;
 
     /**
-     * 申请单状态
+     * 住院号
+     */
+    @TableField("PATIENT_NO")
+    String patientNo;
+
+    /**
+     * 手术类型
      */
     @TableField("OPS_KIND")
     OpsKindEnum opsKind;

@@ -56,8 +56,10 @@ public class ApplicationController {
         // 声明结果
         Map<String, Object> result = Maps.newHashMap();
         result.put("applyNo", application.getApplyNo());
+        result.put("patientNo", application.getPatientNo());
         result.put("icdCode", surgeryItem.getItemCode());
         result.put("icdName", surgeryItem.getItemName());
+        result.put("preDate", application.getPreDate());
         result.put("state", application.getExecStatus());
         result.put("surgeryLevel", application.getDegree() == null ? null : application.getDegree().ordinal());
         result.put("surgeryType", application.getOpsKind());
