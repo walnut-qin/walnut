@@ -10,7 +10,7 @@
  * Copyright (C) 2023 襄阳市中心医院
  *********************************************************/
 
- package com.kaos.walnut.core.frame.mybatis;
+package com.kaos.walnut.core.frame.mybatis;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -18,13 +18,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.kaos.walnut.core.type.Enum;
+import com.kaos.walnut.core.util.EnumUtils;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
-import lombok.extern.log4j.Log4j2;
-
-@Log4j2
 public class EnumTypeHandler<E extends Enum> extends BaseTypeHandler<E> {
     /**
      * E的class对象
@@ -49,26 +47,6 @@ public class EnumTypeHandler<E extends Enum> extends BaseTypeHandler<E> {
     }
 
     /**
-     * 将源字符串对照枚举值域转换为枚举对象
-     * 
-     * @param source 源字符串
-     * @return 枚举对象
-     */
-    private E getValue(String source) throws RuntimeException {
-        // 轮训所有枚举对象，依次对照值域
-        for (E e : classOfE.getEnumConstants()) {
-            if (e.getValue().equals(source)) {
-                return e;
-            }
-        }
-
-        // 若对照失败，则写错误日志
-        String err = String.format("反序列化枚举类型[%s]时, 出现了未对照的值[%s]", classOfE.getName(), source);
-        log.error(err);
-        throw new RuntimeException(err);
-    }
-
-    /**
      * 读数据库操作
      */
     @Override
@@ -76,7 +54,7 @@ public class EnumTypeHandler<E extends Enum> extends BaseTypeHandler<E> {
         if (rs.getObject(columnName) == null) {
             return null;
         }
-        return getValue(rs.getString(columnName));
+        return EnumUtils.fromValue(rs.getString(columnName), classOfE);
     }
 
     /**
@@ -87,7 +65,7 @@ public class EnumTypeHandler<E extends Enum> extends BaseTypeHandler<E> {
         if (rs.getObject(columnIndex) == null) {
             return null;
         }
-        return getValue(rs.getString(columnIndex));
+        return EnumUtils.fromValue(rs.getString(columnIndex), classOfE);
     }
 
     /**
@@ -98,6 +76,6 @@ public class EnumTypeHandler<E extends Enum> extends BaseTypeHandler<E> {
         if (cs.getObject(columnIndex) == null) {
             return null;
         }
-        return getValue(cs.getString(columnIndex));
+        return EnumUtils.fromValue(cs.getString(columnIndex), classOfE);
     }
 }
