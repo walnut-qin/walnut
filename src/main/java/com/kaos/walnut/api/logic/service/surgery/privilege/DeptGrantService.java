@@ -1,7 +1,7 @@
 package com.kaos.walnut.api.logic.service.surgery.privilege;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,7 +79,7 @@ public class DeptGrantService {
      * @param deptId
      */
     @Transactional
-    public void grant(String icdCode, List<String> deptIds) {
+    public void grant(String icdCode, Collection<String> deptIds) {
         deptIds.forEach(deptId -> {
             this.grant(icdCode, deptId);
         });
@@ -92,7 +92,7 @@ public class DeptGrantService {
      * @param icdCodes
      */
     @Transactional
-    public void grant(List<String> icdCodes, String deptId) {
+    public void grant(Collection<String> icdCodes, String deptId) {
         icdCodes.forEach(icdCode -> {
             this.grant(icdCode, deptId);
         });

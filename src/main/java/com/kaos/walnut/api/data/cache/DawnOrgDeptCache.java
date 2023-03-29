@@ -1,11 +1,13 @@
 package com.kaos.walnut.api.data.cache;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import com.kaos.walnut.api.data.entity.DawnOrgDept;
 import com.kaos.walnut.api.data.mapper.DawnOrgDeptMapper;
 import com.kaos.walnut.core.type.Cache;
 
+@Component
 public class DawnOrgDeptCache extends Cache<String, DawnOrgDept> {
     /**
      * 构造函数
