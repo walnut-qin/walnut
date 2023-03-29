@@ -168,7 +168,8 @@ public class TempController {
         }
 
         // 授权过程
-        for (var icdCode : data.keys()) {
+        Integer count = 0;
+        for (var icdCode : data.asMap().keySet()) {
             var docCodes = data.get(icdCode);
 
             // 科室授权
@@ -191,9 +192,10 @@ public class TempController {
                     return this.emplDict.get(x);
                 }
 
-                log.error("fatal error");
                 throw new RuntimeException("医师字典不存在-" + x);
             }).toList());
+
+            log.info(String.format("进度：%d/%d", ++count, data.asMap().keySet().size()));
         }
 
         log.info("授权完毕");
