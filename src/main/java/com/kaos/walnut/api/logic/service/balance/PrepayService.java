@@ -62,7 +62,7 @@ public class PrepayService {
             var subWrapper = new QueryWrapper<FinOprPayModel>().lambda();
             subWrapper.eq(FinOprPayModel::getCardNo, patientNo);
             subWrapper.eq(FinOprPayModel::getTradeCode, FinOprPayModel.TradeCodeEnum.退费);
-            subWrapper.eq(FinOprPayModel::getReferNum, prepay.getReferNum());
+            subWrapper.eq(FinOprPayModel::getPingTaiJSBH, prepay.getReferNum());
             var models = this.finOprPayModelMapper.selectList(subWrapper);
 
             // 计算新值

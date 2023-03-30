@@ -36,6 +36,12 @@ public class FinOprPayModel {
     String referNum;
 
     /**
+     * 关联号
+     */
+    @TableField("PINGTAIJSBH")
+    String pingTaiJSBH;
+
+    /**
      * 在院状态
      */
     @Getter
