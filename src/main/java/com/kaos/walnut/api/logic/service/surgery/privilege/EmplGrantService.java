@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.kaos.walnut.api.data.cache.DawnOrgEmplCache;
 import com.kaos.walnut.api.data.cache.MetComIcdOperationCache;
 import com.kaos.walnut.api.data.entity.MetComIcdOperationGrantEmpl;
+import com.kaos.walnut.api.data.entity.MetComIcdOperationGrantType.GrantTypeEnum;
 import com.kaos.walnut.api.data.mapper.MetComIcdOperationGrantEmplMapper;
 import com.kaos.walnut.core.frame.entity.User;
 
@@ -41,7 +42,7 @@ public class EmplGrantService {
      * @param deptIcd
      */
     @Transactional
-    public void grant(String icdCode, String emplId) {
+    public void grant(String icdCode, String emplId, GrantTypeEnum grantType) {
         // 检索手术记录
         var icd = this.metComIcdOperationCache.get(icdCode);
         if (icd == null) {
@@ -58,6 +59,7 @@ public class EmplGrantService {
         var wrapper = new QueryWrapper<MetComIcdOperationGrantEmpl>().lambda();
         wrapper.eq(MetComIcdOperationGrantEmpl::getIcdCode, icdCode);
         wrapper.eq(MetComIcdOperationGrantEmpl::getEmplId, emplId);
+        wrapper.eq(MetComIcdOperationGrantEmpl::getGrantType, grantType);
         var grantRecord = this.metComIcdOperationGrantEmplMapper.selectOne(wrapper);
         if (grantRecord != null) {
             return;
@@ -67,6 +69,7 @@ public class EmplGrantService {
         grantRecord = new MetComIcdOperationGrantEmpl();
         grantRecord.setIcdCode(icdCode);
         grantRecord.setEmplId(emplId);
+        grantRecord.setGrantType(grantType);
         grantRecord.setOperCode(User.currentUser().getUid());
         grantRecord.setOperDate(LocalDateTime.now());
         this.metComIcdOperationGrantEmplMapper.insert(grantRecord);
@@ -79,9 +82,9 @@ public class EmplGrantService {
      * @param deptId
      */
     @Transactional
-    public void grant(String icdCode, Collection<String> deptIds) {
+    public void grant(String icdCode, Collection<String> deptIds, GrantTypeEnum grantType) {
         deptIds.forEach(deptId -> {
-            this.grant(icdCode, deptId);
+            this.grant(icdCode, deptId, grantType);
         });
     }
 
@@ -92,9 +95,9 @@ public class EmplGrantService {
      * @param icdCodes
      */
     @Transactional
-    public void grant(Collection<String> icdCodes, String deptId) {
+    public void grant(Collection<String> icdCodes, String deptId, GrantTypeEnum grantType) {
         icdCodes.forEach(icdCode -> {
-            this.grant(icdCode, deptId);
+            this.grant(icdCode, deptId, grantType);
         });
     }
 }

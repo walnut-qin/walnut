@@ -5,13 +5,14 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.kaos.walnut.api.data.entity.MetComIcdOperationGrantType.GrantTypeEnum;
 import com.kaos.walnut.core.util.ObjectUtils;
 import com.kaos.walnut.core.util.StringUtils;
 
 import lombok.Data;
 
 @Data
-@TableName("XYHIS.MET_COM_ICDOPERATION_GRANTEMPL")
+@TableName("XYHIS.MET_COM_ICDOPERATION_GRANTEMPI")
 public class MetComIcdOperationGrantEmpl {
     /**
      * ICD编码
@@ -24,6 +25,12 @@ public class MetComIcdOperationGrantEmpl {
      */
     @TableId("EMPL_ID")
     String emplId;
+
+    /**
+     * 科室编码
+     */
+    @TableId("GRANT_TYPE")
+    GrantTypeEnum grantType;
 
     /**
      * 操作员
