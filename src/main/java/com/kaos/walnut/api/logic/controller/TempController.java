@@ -15,28 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.kaos.walnut.api.data.cache.DawnOrgDeptCache;
-import com.kaos.walnut.api.data.mapper.DawnOrgEmplMapper;
-import com.kaos.walnut.api.logic.service.surgery.privilege.DeptGrantService;
+import com.kaos.walnut.api.data.entity.MetComIcdOperationGrantType.GrantTypeEnum;
+import com.kaos.walnut.api.logic.service.surgery.DictionaryService;
 import com.kaos.walnut.api.logic.service.surgery.privilege.EmplGrantService;
 import com.kaos.walnut.core.type.MediaType;
 import com.kaos.walnut.core.type.annotations.ApiName;
 import com.kaos.walnut.core.util.StringUtils;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @RestController
 @RequestMapping("/api/temp")
 public class TempController {
     @Autowired
-    DawnOrgDeptCache dawnOrgDeptCache;
-
-    @Autowired
-    DeptGrantService deptGrantService;
-
-    @Autowired
     EmplGrantService emplGrantService;
 
     @Autowired
-    DawnOrgEmplMapper dawnOrgEmplMapper;
+    DictionaryService dictionaryService;
 
     @ApiName("trans")
     @RequestMapping(value = "trans", method = RequestMethod.POST, produces = MediaType.JSON)
@@ -60,8 +56,38 @@ public class TempController {
 
             // 读取医师列表
             for (int j = 6; j < row.getLastCellNum(); j++) {
-                emplMultiMap.put(icdCode, StringUtils.leftPad(row.getCell(j).toString().trim(), 6, '0'));
+                var cell = row.getCell(j);
+                var emplCode = StringUtils.EMPTY;
+                switch (cell.getCellType()) {
+                    case NUMERIC:
+                        emplCode += Double.valueOf(cell.getNumericCellValue()).intValue();
+                        break;
+
+                    case STRING:
+                        emplCode += cell.getStringCellValue().trim();
+                        break;
+
+                    default:
+                        emplCode += cell.toString().trim();
+                        break;
+                }
+                if (StringUtils.isBlank(emplCode)) {
+                    continue;
+                }
+                emplMultiMap.put(icdCode, StringUtils.leftPad(emplCode, 6, '0'));
             }
+        }
+
+        // 修改手术等级
+        for (var icdCode : lvlMap.keySet()) {
+            this.dictionaryService.changeLevel(icdCode, lvlMap.get(icdCode));
+        }
+
+        // 授权
+        Integer cnt = 0;
+        for (var icdCode : emplMultiMap.asMap().keySet()) {
+            log.info(String.format("开始授权 - %d-%s", ++cnt, icdCode));
+            this.emplGrantService.grant(icdCode, emplMultiMap.get(icdCode), GrantTypeEnum.普通手术);
         }
 
         return lvlMap;

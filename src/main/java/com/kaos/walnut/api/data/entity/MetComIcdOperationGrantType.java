@@ -43,8 +43,8 @@ public class MetComIcdOperationGrantType {
     @Getter
     @AllArgsConstructor
     public enum GrantTypeEnum implements Enum {
-        在院结算("1", "普通手术"),
-        出院结算("2", "日间手术");
+        普通手术("1", "普通手术"),
+        日间手术("2", "日间手术");
 
         /**
          * 数据库存值
